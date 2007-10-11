@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
@@ -35,17 +36,17 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  * @author imi
  */
-public class MoveAction extends MapMode implements SelectionEnded {
+public class SelectAction extends MapMode implements SelectionEnded {
     
     enum Mode {move, rotate}
     private final Mode mode;
 
-    public static class MoveGroup extends GroupAction {
-        public MoveGroup(MapFrame mf) {
-            super(KeyEvent.VK_M,0);
+    public static class SelectGroup extends GroupAction {
+        public SelectGroup(MapFrame mf) {
+            super(KeyEvent.VK_S,0);
             putValue("help", "Action/Move");
-            actions.add(new MoveAction(mf, tr("Move"), Mode.move, tr("Move around objects that are under the mouse or selected.")));
-            actions.add(new MoveAction(mf, tr("Rotate"), Mode.rotate, tr("Rotate selected nodes around centre")));
+            actions.add(new SelectAction(mf, tr("Select/Move"), Mode.move, tr("Select and move around objects that are under the mouse or selected.")));
+            actions.add(new SelectAction(mf, tr("Rotate"), Mode.rotate, tr("Rotate selected nodes around centre")));
             setCurrent(0);
         }
     }
@@ -65,7 +66,7 @@ public class MoveAction extends MapMode implements SelectionEnded {
      * Create a new MoveAction
      * @param mapFrame The MapFrame, this action belongs to.
      */
-    public MoveAction(MapFrame mapFrame, String name, Mode mode, String desc) {
+    public SelectAction(MapFrame mapFrame, String name, Mode mode, String desc) {
         super(name, "move/"+mode, desc, mapFrame, getCursor());
         this.mode = mode;
         putValue("help", "Action/Move/"+Character.toUpperCase(mode.toString().charAt(0))+mode.toString().substring(1));
@@ -175,6 +176,7 @@ public class MoveAction extends MapMode implements SelectionEnded {
         } else {
             selectionMode = true;
             selectionManager.register(Main.map.mapView);
+            selectionManager.mousePressed(e);
         }
 
         Main.map.mapView.repaint();
@@ -193,8 +195,29 @@ public class MoveAction extends MapMode implements SelectionEnded {
             Main.map.mapView.setCursor(oldCursor);
     }
 
-
     public void selectionEnded(Rectangle r, boolean alt, boolean shift, boolean ctrl) {
         SelectionAction.selectEverythingInRectangle(selectionManager, r, alt, shift, ctrl);
+    }
+
+    public static void selectEverythingInRectangle(
+            SelectionManager selectionManager, Rectangle r,
+            boolean alt, boolean shift, boolean ctrl) {
+        if (shift && ctrl)
+            return; // not allowed together
+
+        Collection<OsmPrimitive> curSel;
+        if (!ctrl && !shift)
+            curSel = new LinkedList<OsmPrimitive>(); // new selection will replace the old.
+        else
+            curSel = Main.ds.getSelected();
+
+        Collection<OsmPrimitive> selectionList = selectionManager.getObjectsInRectangle(r,alt);
+        for (OsmPrimitive osm : selectionList)
+            if (ctrl)
+                curSel.remove(osm);
+            else
+                curSel.add(osm);
+        Main.ds.setSelected(curSel);
+        Main.map.mapView.repaint();
     }
 }
