@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.GeneralPath;
 import java.util.Collection;
@@ -29,7 +28,6 @@ import org.openstreetmap.josm.gui.mappaint.ElemStyle;
 import org.openstreetmap.josm.gui.mappaint.IconElemStyle;
 import org.openstreetmap.josm.gui.mappaint.LineElemStyle;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
-import org.openstreetmap.josm.tools.ColorHelper;
 
 public class MapPaintVisitor implements Visitor {
     
@@ -267,11 +265,9 @@ public class MapPaintVisitor implements Visitor {
         Point p1 = nc.getPoint(n1.eastNorth);
         Point p2 = nc.getPoint(n2.eastNorth);
 
-        // checking if this segment is visible
-        if ((p1.x < 0) && (p2.x < 0)) return ;
-        if ((p1.y < 0) && (p2.y < 0)) return ;
-        if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return ;
-        if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return ;
+        if (!isSegmentVisible(p1, p2)) {
+            return;
+        }
         //if (ls.selected)
         // col = selectedColor;
         //g.setColor(col);
@@ -392,24 +388,32 @@ public class MapPaintVisitor implements Visitor {
     }
     
     /**
-     * Draw an number of the order of the two consecutive nodes within the
+     * Draw a number of the order of the two consecutive nodes within the
      * parents way
      */
     protected void drawOrderNumber(Node n1, Node n2, int orderNumber) {
-        int strlen = (""+orderNumber).length();
         Point p1 = nc.getPoint(n1.eastNorth);
         Point p2 = nc.getPoint(n2.eastNorth);
+        if (!isSegmentVisible(p1, p2)) {
+            return;
+        }
+        int strlen = (""+orderNumber).length();
         int x = (p1.x+p2.x)/2 - 4*strlen;
         int y = (p1.y+p2.y)/2 + 4;
 
-        Rectangle screen = g.getClipBounds();
-        if ((screen != null) && screen.contains(x,y)) {
-            Color c = g.getColor();
-            g.setColor(backgroundColor);
-            g.fillRect(x-1, y-12, 8*strlen+1, 14);
-            g.setColor(c);
-            g.drawString(""+orderNumber, x, y);
-        }
+        Color c = g.getColor();
+        g.setColor(backgroundColor);
+        g.fillRect(x-1, y-12, 8*strlen+1, 14);
+        g.setColor(c);
+        g.drawString(""+orderNumber, x, y);
+      }
+
+    private boolean isSegmentVisible(Point p1, Point p2) {
+        if ((p1.x < 0) && (p2.x < 0)) return false;
+        if ((p1.y < 0) && (p2.y < 0)) return false;
+        if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return false;
+        if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return false;
+        return true;
     }
     
     public void setGraphics(Graphics g) {
