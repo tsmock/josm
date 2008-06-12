@@ -26,7 +26,7 @@ import org.openstreetmap.josm.actions.AboutAction;
 public class GettingStarted extends JPanel {
 
     private JPanel panel;
-    static private String content = "";	
+    static private String content = "";    
 
     public class LinkGeneral extends JEditorPane implements HyperlinkListener {
         private String action;
@@ -52,7 +52,7 @@ public class GettingStarted extends JPanel {
             try {
                 motdcontent = wr.read(baseurl + "/wiki/MessageOfTheDay");
             } catch (IOException ioe) {
-                motdcontent = tr("<html>\n<h1>JOSM, the Java OpenStreetMap editor</h1>\n<h2>(Message of the day not available)</h2>");			
+                motdcontent = tr("<html>\n<h1>JOSM, the Java OpenStreetMap editor</h1>\n<h2>(Message of the day not available)</h2>");            
             }
 
             int myVersion;
@@ -69,21 +69,23 @@ public class GettingStarted extends JPanel {
             /* look for hrefs of the form wiki/MessageOfTheDay>123 where > can also be <,<=,>= and the number is the revision number */
             int start = 0;
             boolean nothingIncluded = true;
-            Pattern versionPattern = Pattern.compile("\\<a[^\\>]*href\\=\\\"([^\\\"]*\\/wiki\\/MessageOfTheDay(\\%3E%3D|%3C%3D|\\%3E|\\%3C)([0-9]+))\\\"[^\\>]*\\>[^\\<]*\\<\\/a\\>", Pattern.CASE_INSENSITIVE|Pattern.DOTALL|Pattern.MULTILINE);
+            Pattern versionPattern = Pattern.compile("\\<a[^\\>]*href\\=\\\"([^\\\"]*\\/wiki\\/)(MessageOfTheDay(\\%3E%3D|%3C%3D|\\%3E|\\%3C)([0-9]+))\\\"[^\\>]*\\>[^\\<]*\\<\\/a\\>", Pattern.CASE_INSENSITIVE|Pattern.DOTALL|Pattern.MULTILINE);
             Matcher matcher = versionPattern.matcher(motdcontent);
             matcher.reset();
             while (matcher.find()) {
-                int targetVersion = Integer.parseInt(matcher.group(3));
-                String condition = matcher.group(2);
+                int targetVersion = Integer.parseInt(matcher.group(4));
+                String condition = matcher.group(3);
                 boolean included = false;
                 if (condition.equals("%3E")) {
-                    if ((myVersion == 0 || myVersion > targetVersion) && ! Main.pref.getBoolean("motd.gt."+targetVersion)) {
-                        Main.pref.put("motd.gt."+targetVersion, true);
+                    if ((myVersion == 0 || myVersion > targetVersion) 
+                        /* && ! Main.pref.getBoolean("motd.gt."+targetVersion) */) {
+                        /* Main.pref.put("motd.gt."+targetVersion, true); */
                         included = true;
                     }
                 } else if (condition.equals("%3E%3D")) {
-                    if ((myVersion == 0 || myVersion >= targetVersion) && ! Main.pref.getBoolean("motd.ge."+targetVersion)) {
-                        Main.pref.put("motd.ge."+targetVersion, true);
+                    if ((myVersion == 0 || myVersion >= targetVersion) 
+                        /* && ! Main.pref.getBoolean("motd.ge."+targetVersion) */) {
+                        /* Main.pref.put("motd.ge."+targetVersion, true); */
                         included = true;
                     }
                 } else if (condition.equals("%3C")) {
@@ -96,12 +98,21 @@ public class GettingStarted extends JPanel {
                 }
                 start = matcher.end();
                 if (included) {
+                    // translators: set this to a suitable language code to
+                    // be able to provide translations in the Wiki.
+                    String languageCode = tr("En:");
+                    String url = matcher.group(1) + languageCode + matcher.group(2);
                     try {
-                        content += wr.read(matcher.group(1)).replace("<html>", "").replace("</html>", "").replace("<div id=\"searchable\">", "").replace("</div>", "");
+                        content += wr.read(url).replace("<html>", "").replace("</html>", "").replace("<div id=\"searchable\">", "").replace("</div>", "");
                         nothingIncluded = false;
                     } catch (IOException ioe) {
-                        // do nothing
-                    }			
+                        url = matcher.group(1) + matcher.group(2);
+                        try {
+                            content += wr.read(url).replace("<html>", "").replace("</html>", "").replace("<div id=\"searchable\">", "").replace("</div>", "");
+                            nothingIncluded = false;
+                        } catch (IOException ioe2) {
+                        }            
+                    }            
                 }
             }
             if (nothingIncluded) {
