@@ -156,7 +156,7 @@ public class MapStatus extends JPanel implements Helpful {
                         osmNearest.visit(visitor);
                         nameText.setText(visitor.name);
                     } else
-                        nameText.setText("(no object)");
+                        nameText.setText(tr("(no object)"));
 
                     // Popup Information
                     if ((ms.modifiers & MouseEvent.BUTTON2_DOWN_MASK) != 0 ) {
@@ -333,7 +333,7 @@ public class MapStatus extends JPanel implements Helpful {
     }
 
     public String helpTopic() {
-        return "Statusline";
+        return tr("Statusline");
     }
     
     public void setHelpText(String t) {
