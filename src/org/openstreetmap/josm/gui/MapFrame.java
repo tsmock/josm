@@ -66,6 +66,7 @@ public class MapFrame extends JPanel implements Destroyable {
 
     public final ButtonGroup toolGroup = new ButtonGroup();
 
+    private PropertiesDialog propertiesDialog;
 
     public MapFrame() {
         setSize(400,400);
@@ -94,7 +95,7 @@ public class MapFrame extends JPanel implements Destroyable {
         toggleDialogs.setLayout(new BoxLayout(toggleDialogs, BoxLayout.Y_AXIS));
 
         addToggleDialog(new LayerListDialog(this));
-        addToggleDialog(new PropertiesDialog(this));
+        addToggleDialog(propertiesDialog = new PropertiesDialog(this));
         addToggleDialog(new HistoryDialog());
         addToggleDialog(new SelectionListDialog());
         addToggleDialog(new UserListDialog());
@@ -186,5 +187,9 @@ public class MapFrame extends JPanel implements Destroyable {
         panel.add(toolBarActions, BorderLayout.WEST);
         if (statusLine != null)
             panel.add(statusLine, BorderLayout.SOUTH);
+    }
+
+    public final PropertiesDialog getPropertiesDialog() {
+        return propertiesDialog;
     }
 }
