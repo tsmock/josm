@@ -72,6 +72,7 @@ public class OpenAction extends DiskAccessAction {
             DataSet dataSet = OsmReader.parseDataSet(new FileInputStream(file), null, Main.pleaseWaitDlg);
             OsmDataLayer layer = new OsmDataLayer(dataSet, file.getName(), file);
             Main.main.addLayer(layer);
+            layer.fireDataChange();
         }
         else
             JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("Unknown file extension: {0}", fn.substring(file.getName().lastIndexOf('.')+1)));
