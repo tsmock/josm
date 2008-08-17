@@ -26,6 +26,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.visitor.SimplePaintVisitor;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.mappaint.AreaElemStyle;
 import org.openstreetmap.josm.gui.mappaint.ElemStyle;
@@ -33,8 +34,7 @@ import org.openstreetmap.josm.gui.mappaint.IconElemStyle;
 import org.openstreetmap.josm.gui.mappaint.LineElemStyle;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
 
-public class MapPaintVisitor implements Visitor {
-    
+public class MapPaintVisitor extends SimplePaintVisitor {
     protected boolean useRealWidth;
     protected boolean zoomLevelDisplay;
     protected boolean fillAreas;
@@ -43,63 +43,9 @@ public class MapPaintVisitor implements Visitor {
     protected Color textColor;
     protected boolean currentDashed = false;
     protected int currentWidth = 0;
-    protected Stroke currentStroke = null;    
+    protected Stroke currentStroke = null;
     protected static final Font orderFont = new Font("Helvetica", Font.PLAIN, 8);
-    
-    public boolean inactive;
-    
-    /**
-     * The environment to paint to.
-     */
-    protected Graphics g;
-    
-    /**
-     * MapView to get screen coordinates.
-     */
-    protected NavigatableComponent nc;
-    
-    /**
-     * Draw subsequent segments of same color as one Path
-     */
-    protected Color currentColor = null;
-    protected GeneralPath currentPath = new GeneralPath();
-    
-    protected static final double PHI = Math.toRadians(20);
-    
-    /**
-     * Preferences
-    */
-    protected Color inactiveColor;
-    protected Color selectedColor;
-    protected Color nodeColor;
-    protected Color dfltWayColor;
-    protected Color untaggedWayColor;
-    protected Color incompleteColor;
-    protected Color backgroundColor;
-    protected boolean showDirectionArrow;
-    protected boolean showRelevantDirectionsOnly;
-    protected boolean showOrderNumber;
-    
-    private boolean fillSelectedNode;
 
-    private boolean fillUnselectedNode;
-
-    private int selectedNodeRadius;
-
-    private int unselectedNodeRadius;
-    
-    private int taggedNodeRadius;
-
-    private int selectedNodeSize;
-
-    private int unselectedNodeSize;
-
-    private int defaultSegmentWidth = 2;
-    private int taggedNodeSize;
-
-    public final static Color darkerblue = new Color(0,0,96);
-    public final static Color darkblue = new Color(0,0,128);
-    
     protected boolean isZoomOk(ElemStyle e) {
         double circum = Main.map.mapView.getScale()*100*Main.proj.scaleFactor()*40041455; // circumference of the earth in meter
 
@@ -121,9 +67,9 @@ public class MapPaintVisitor implements Visitor {
         // so the exact "correcting value" below depends only on the screen size and resolution
         // XXX - do we need a Preference setting for this (if things vary widely)?
         /*System.out.println(
-   "Circum: " + circum + 
-   " max: " + e.getMaxScale() + "(" + e.getMaxScale()/22 + ")" +
-   " min:" + e.getMinScale() + "(" + e.getMinScale()/22 + ")");*/
+        "Circum: " + circum +
+        " max: " + e.getMaxScale() + "(" + e.getMaxScale()/22 + ")" +
+        " min:" + e.getMinScale() + "(" + e.getMinScale()/22 + ")");*/
         if(circum>=e.getMaxScale() / 22 || circum<e.getMinScale() / 22)
             return false;
         return true;
@@ -161,15 +107,14 @@ public class MapPaintVisitor implements Visitor {
      */
     public void visit(Way w) {
         double circum = Main.map.mapView.getScale()*100*Main.proj.scaleFactor()*40041455; // circumference of the earth in meter
-                // show direction arrows, if draw.segment.relevant_directions_only is not set, the way is tagged with a direction key
-                // (even if the tag is negated as in oneway=false) or the way is selected
-        boolean showDirection = w.selected ||
-                                        ((!useRealWidth) && (showDirectionArrow
-                                                             && (!showRelevantDirectionsOnly || w.hasDirectionKeys)));
+        // show direction arrows, if draw.segment.relevant_directions_only is not set, the way is tagged with a direction key
+        // (even if the tag is negated as in oneway=false) or the way is selected
+        boolean showDirection = w.selected || ((!useRealWidth) && (showDirectionArrow
+         && (!showRelevantDirectionsOnly || w.hasDirectionKeys)));
 
         Color colour = untaggedColor;
         int width = defaultSegmentWidth;
-        int realWidth = 0; //the real width of the element in meters 
+        int realWidth = 0; //the real width of the element in meters
         boolean dashed = false;
         boolean area = false;
         ElemStyle wayStyle = MapPaintStyles.getStyle(w);
@@ -184,7 +129,7 @@ public class MapPaintVisitor implements Visitor {
             {
                 colour = ((LineElemStyle)wayStyle).colour;
                 width = ((LineElemStyle)wayStyle).width;
-                realWidth = ((LineElemStyle)wayStyle).realWidth; 
+                realWidth = ((LineElemStyle)wayStyle).realWidth;
                 dashed = ((LineElemStyle)wayStyle).dashed;
             }
             else if (wayStyle instanceof AreaElemStyle)
@@ -233,7 +178,7 @@ public class MapPaintVisitor implements Visitor {
     public void visit(Relation e) {
         // relations are not (yet?) drawn.
     }
-    
+
     // This assumes that all segments are aligned in the same direction!
     protected void drawWayAsArea(Way w, Color colour)
     {
@@ -294,29 +239,16 @@ public class MapPaintVisitor implements Visitor {
         if (!isSegmentVisible(p1, p2)) {
             return;
         }
-        //if (ls.selected)
-        // col = selectedColor;
-        //g.setColor(col);
-        //g.setWidth(width);
-        //if (dashed) 
-        // g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,0,new float[] {9},0));
-        //else 
-        // g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
-
-        //g.drawLine(p1.x, p1.y, p2.x, p2.y);
+        drawVirtualNode(p1, p2, col);
         currentPath.moveTo(p1.x, p1.y);
         currentPath.lineTo(p2.x, p2.y);
 
         if (showDirection) {
             double t = Math.atan2(p2.y-p1.y, p2.x-p1.x) + Math.PI;
-            //g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
-            //g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
             currentPath.lineTo((int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
             currentPath.moveTo((int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
             currentPath.lineTo(p2.x, p2.y);
         }
-        //g2d.setStroke(new BasicStroke(1));
-
     }
 
     protected void displaySegments() {
@@ -331,7 +263,7 @@ public class MapPaintVisitor implements Visitor {
             if (currentStroke == null) {
                 if (currentDashed)
                     g2d.setStroke(new BasicStroke(currentWidth,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,0,new float[] {9},0));
-                else 
+                else
                     g2d.setStroke(new BasicStroke(currentWidth,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
             }
             g2d.draw(currentPath);
@@ -368,50 +300,14 @@ public class MapPaintVisitor implements Visitor {
 
     // NW 111106 Overridden from SimplePaintVisitor in josm-1.4-nw1
     // Shows areas before non-areas
-    public void visitAll(DataSet data) {
-        inactiveColor = Main.pref.getColor(marktr("inactive"), Color.DARK_GRAY);
-        selectedColor = Main.pref.getColor(marktr("selected"), Color.YELLOW);
-        nodeColor = Main.pref.getColor(marktr("node"), Color.RED);
-        dfltWayColor = Main.pref.getColor(marktr("way"), darkblue);
-        incompleteColor = Main.pref.getColor(marktr("incomplete way"), darkerblue);
-        backgroundColor = Main.pref.getColor(marktr("background"), Color.BLACK);
+    public void visitAll(DataSet data, Boolean virtual) {
+        getSettings(virtual);
         untaggedColor = Main.pref.getColor(marktr("untagged"),Color.GRAY);
         textColor = Main.pref.getColor (marktr("text"), Color.WHITE);
-        showDirectionArrow = Main.pref.getBoolean("draw.segment.direction");
-        showRelevantDirectionsOnly = Main.pref.getBoolean("draw.segment.relevant_directions_only");
-        showOrderNumber = Main.pref.getBoolean("draw.segment.order_number");
         useRealWidth = Main.pref.getBoolean("mappaint.useRealWidth",false);
         zoomLevelDisplay = Main.pref.getBoolean("mappaint.zoomLevelDisplay",false);
         fillAreas = Main.pref.getBoolean("mappaint.fillareas", true);
-
-        selectedNodeRadius = Main.pref.getInteger("mappaint.node.selected-size",
-                5) / 2;
-        selectedNodeSize = selectedNodeRadius * 2;
-
-        unselectedNodeRadius = Main.pref.getInteger(
-                "mappaint.node.unselected-size", 3) / 2;
-        unselectedNodeSize = unselectedNodeRadius * 2;
-
-        taggedNodeRadius = Main.pref.getInteger(
-                "mappaint.node.tagged-size", 5) / 2;
-        taggedNodeSize = taggedNodeRadius * 2;
-
-        defaultSegmentWidth = Main.pref.getInteger(
-                "mappaint.segment.default-width", 2);
-
-        fillSelectedNode = Main.pref.getBoolean("mappaint.node.fill-selected",
-                true);
-        fillUnselectedNode = Main.pref.getBoolean(
-                "mappaint.node.fill-unselected", false);
-
-        ((Graphics2D)g)
-                .setRenderingHint(
-                        RenderingHints.KEY_ANTIALIASING,
-                        Main.pref.getBoolean("mappaint.use-antialiasing", true) ? RenderingHints.VALUE_ANTIALIAS_ON
-                                : RenderingHints.VALUE_ANTIALIAS_OFF);
-
-        fillAlpha = Math.min(255, Math.max(0, Integer.valueOf(Main.pref
-                .getInteger("mappaint.fillalpha", 50))));
+        fillAlpha = Math.min(255, Math.max(0, Integer.valueOf(Main.pref.getInteger("mappaint.fillalpha", 50))));
 
         Collection<Way> noAreaWays = new LinkedList<Way>();
 
@@ -434,7 +330,7 @@ public class MapPaintVisitor implements Visitor {
             }
         displaySegments();
     }
-    
+
     /**
      * Draw a number of the order of the two consecutive nodes within the
      * parents way
@@ -454,21 +350,5 @@ public class MapPaintVisitor implements Visitor {
         g.fillRect(x-1, y-12, 8*strlen+1, 14);
         g.setColor(c);
         g.drawString(""+orderNumber, x, y);
-      }
-
-    private boolean isSegmentVisible(Point p1, Point p2) {
-        if ((p1.x < 0) && (p2.x < 0)) return false;
-        if ((p1.y < 0) && (p2.y < 0)) return false;
-        if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return false;
-        if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return false;
-        return true;
-    }
-    
-    public void setGraphics(Graphics g) {
-        this.g = g;
-    }
-
-    public void setNavigatableComponent(NavigatableComponent nc) {
-        this.nc = nc;
     }
 }
