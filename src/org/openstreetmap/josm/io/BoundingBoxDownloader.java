@@ -30,13 +30,16 @@ public class BoundingBoxDownloader extends OsmServerReader {
         this.lon1 = lon1;
         this.lat2 = lat2;
         this.lon2 = lon2;
+        // store the bounding box in the preferences so it can be
+        // re-used across invocations of josm
+        Main.pref.put("osm-download.bounds", lat1+";"+lon1+";"+lat2+";"+lon2);
     }
 
     /**
      * Retrieve raw gps waypoints from the server API.
      * @return A list of all primitives retrieved. Currently, the list of lists
-     * 		contain only one list, since the server cannot distinguish between
-     * 		ways.
+     *      contain only one list, since the server cannot distinguish between
+     *      ways.
      */
     public GpxData parseRawGps() throws IOException, SAXException {
         Main.pleaseWaitDlg.progress.setValue(0);
@@ -97,14 +100,6 @@ public class BoundingBoxDownloader extends OsmServerReader {
                 return null;
             Main.pleaseWaitDlg.currentAction.setText(tr("Downloading OSM data..."));
             final DataSet data = OsmReader.parseDataSet(in, null, Main.pleaseWaitDlg);
-            /*
-             * We're not doing this here anymore as the API now properly sets a bounds element
-             * which will get parsed.
-            String origin = Main.pref.get("osm-server.url")+"/"+Main.pref.get("osm-server.version", "0.5");
-            Bounds bounds = new Bounds(new LatLon(lat1, lon1), new LatLon(lat2, lon2));
-            DataSource src = new DataSource(bounds, origin);
-            data.dataSources.add(src);
-             */
             in.close();
             activeConnection = null;
             return data;
