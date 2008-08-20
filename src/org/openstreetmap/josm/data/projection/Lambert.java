@@ -1,6 +1,6 @@
 //License: GPL. For details, see LICENSE file.
 //Thanks to Johan Montagnat and its geoconv java converter application
-//(http://www.i3s.unice.fr/~johan/gps/ , published under GPL license) 
+//(http://www.i3s.unice.fr/~johan/gps/ , published under GPL license)
 //from which some code and constants have been reused here.
 package org.openstreetmap.josm.data.projection;
 
@@ -45,7 +45,7 @@ public class Lambert implements Projection {
     public static final double epsilon = 1e-11;
 
     /**
-     * France is divided in 4 Lambert projection zones (1,2,3 + 4th for Corsica) 
+     * France is divided in 4 Lambert projection zones (1,2,3 + 4th for Corsica)
      */
     public static final double cMaxLatZone1 = Math.toRadians(57 * 0.9);
 
@@ -90,8 +90,8 @@ public class Lambert implements Projection {
                 currentZone = 2;
             // zone III or IV
             else if (lt > zoneLimits[3])
-                // Note: zone IV is dedicated to Corsica island and extends from 47.8 to 
-                // 45.9 degrees of latitude. There is an overlap with zone III that can be 
+                // Note: zone IV is dedicated to Corsica island and extends from 47.8 to
+                // 45.9 degrees of latitude. There is an overlap with zone III that can be
                 // solved only with longitude (covers Corsica if lon > 7.2 degree)
                 if (lg < Math.toRadians(8 * 0.9))
                     currentZone = 2;
@@ -100,20 +100,23 @@ public class Lambert implements Projection {
         } else {
             outOfLambertZones = true; // possible when MAX_LAT is used
         }
-        if (layoutZone == -1)
-            layoutZone = currentZone;
-        else if (layoutZone != currentZone && !outOfLambertZones) {
-            if ((currentZone < layoutZone && Math.abs(zoneLimits[currentZone] - lt) > cMaxOverlappingZones)
-                    || (currentZone > layoutZone && Math.abs(zoneLimits[layoutZone] - lt) > cMaxOverlappingZones)) {
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("IMPORTANT : data positionned far away from\n"
-                                +"the current Lambert zone limits.\n"
-                                +"Undo your last action, Save your work \n"
-                                +"and Start a new layer on the new zone."));
-                layoutZone = -1;
-            } else {
-                System.out.println("temporarily extends Lambert zone " + layoutZone 
-                        + " projection at lat,lon:" + lt + "," + lg);
+        if (!outOfLambertZones) {
+            if (layoutZone == -1)
+                layoutZone = currentZone;
+            else if (layoutZone != currentZone) {
+                if ((currentZone < layoutZone && Math.abs(zoneLimits[currentZone] - lt) > cMaxOverlappingZones)
+                        || (currentZone > layoutZone && Math.abs(zoneLimits[layoutZone] - lt) > cMaxOverlappingZones)) {
+                    JOptionPane.showMessageDialog(Main.parent,
+                                    tr("IMPORTANT : data positionned far away from\n"
+                                            + "the current Lambert zone limits.\n"
+                                            + "Undo your last action, Save your work \n"
+                                            + "and Start a new layer on the new zone."));
+                    layoutZone = -1;
+                } else {
+                    System.out.println("temporarily extends Lambert zone "
+                            + layoutZone + " projection at lat,lon:" + lt + ","
+                            + lg);
+                }
             }
         }
         if (layoutZone == -1) {
@@ -155,7 +158,7 @@ public class Lambert implements Projection {
     /**
      * Initializes from geographic coordinates. Note that reference ellipsoid
      * used by Lambert is the Clark ellipsoid.
-     * 
+     *
      * @param lat latitude in grad
      * @param lon longitude in grad
      * @param Xs  false east (coordinate system origin) in meters
@@ -176,7 +179,7 @@ public class Lambert implements Projection {
     /**
      * Initializes from projected coordinates (conic projection). Note that
      * reference ellipsoid used by Lambert is Clark
-     * 
+     *
      * @param coord projected coordinates pair in meters
      * @param Xs    false east (coordinate system origin) in meters
      * @param Ys    false north (coordinate system origin) in meters
@@ -207,7 +210,7 @@ public class Lambert implements Projection {
     /**
      * Translate latitude/longitude in WGS84, (ellipsoid GRS80) to Lambert
      * geographic, (ellipsoid Clark)
-     * 
+     *
      * @param wgs
      * @return
      */
@@ -249,7 +252,7 @@ public class Lambert implements Projection {
 
     /**
      * initializes from cartesian coordinates
-     * 
+     *
      * @param X
      *            1st coordinate in meters
      * @param Y
