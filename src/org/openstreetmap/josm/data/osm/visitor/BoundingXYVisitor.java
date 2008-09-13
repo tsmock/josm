@@ -4,13 +4,14 @@ package org.openstreetmap.josm.data.osm.visitor;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
- * Calculates the total bounding rectangle of a series of OsmPrimitives, using the 
+ * Calculates the total bounding rectangle of a series of {@link OsmPrimitive} objects, using the 
  * EastNorth values as reference.
  * @author imi
  */
@@ -41,7 +42,7 @@ public class BoundingXYVisitor implements Visitor {
                 min = eastNorth;
             else if (eastNorth.east() < min.east() || eastNorth.north() < min.north())
                 min = new EastNorth(Math.min(min.east(), eastNorth.east()), Math.min(min.north(), eastNorth.north()));
-            
+
             if (max == null)
                 max = eastNorth;
             else if (eastNorth.east() > max.east() || eastNorth.north() > max.north())
@@ -56,5 +57,31 @@ public class BoundingXYVisitor implements Visitor {
         if (min == null || max == null)
             return null;
         return new Bounds(Main.proj.eastNorth2latlon(min), Main.proj.eastNorth2latlon(max));
+    }
+
+    /**
+     * Enlarges the calculated bounding box by 0.0001 degrees. 
+     * If the bounding box has not been set (<code>min</code> or <code>max</code>
+     * equal <code>null</code>) this method does not do anything.
+     *    
+     * @param enlargeDegree
+     */
+    public void enlargeBoundingBox() {
+        enlargeBoundingBox(0.0001);
+    }
+
+    /**
+     * Enlarges the calculated bounding box by the specified number of degrees. 
+     * If the bounding box has not been set (<code>min</code> or <code>max</code>
+     * equal <code>null</code>) this method does not do anything.
+     *    
+     * @param enlargeDegree
+     */
+    public void enlargeBoundingBox(double enlargeDegree) {
+        if (min == null || max == null)
+            return;
+        EastNorth en = new EastNorth(enlargeDegree, enlargeDegree);
+        min = new EastNorth(min.east() - en.east(), min.north() - en.north());
+        max = new EastNorth(max.east() + en.east(), max.north() + en.north());
     }
 }
