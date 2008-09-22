@@ -14,27 +14,25 @@ import java.util.List;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 
 /**
- * DataSet is the data behind the application. It can consists of only a few
- * points up to the whole osm database. DataSet's can be merged together,
- * saved, (up/down/disk)loaded etc.
- *
- * Note that DataSet is not an osm-primitive and so has no key association
- * but a few members to store some information.
- *
+ * DataSet is the data behind the application. It can consists of only a few points up to the whole
+ * osm database. DataSet's can be merged together, saved, (up/down/disk)loaded etc.
+ * 
+ * Note that DataSet is not an osm-primitive and so has no key association but a few members to
+ * store some information.
+ * 
  * @author imi
  */
 public class DataSet implements Cloneable {
 
     /**
-     * All nodes goes here, even when included in other data (ways etc).
-     * This enables the instant conversion of the whole DataSet by iterating over
-     * this data structure.
+     * All nodes goes here, even when included in other data (ways etc). This enables the instant
+     * conversion of the whole DataSet by iterating over this data structure.
      */
     public Collection<Node> nodes = new LinkedList<Node>();
 
     /**
      * All ways (Streets etc.) in the DataSet.
-     *
+     * 
      * The way nodes are stored only in the way list.
      */
     public Collection<Way> ways = new LinkedList<Way>();
@@ -48,19 +46,18 @@ public class DataSet implements Cloneable {
      * All data sources of this DataSet.
      */
     public Collection<DataSource> dataSources = new LinkedList<DataSource>();
-    
+
     /**
-     * A list of listeners to selection changed events. The list is static,
-     * as listeners register themselves for any dataset selection changes that 
-     * occur, regardless of the current active dataset. (However, the
-     * selection does only change in the active layer)
+     * A list of listeners to selection changed events. The list is static, as listeners register
+     * themselves for any dataset selection changes that occur, regardless of the current active
+     * dataset. (However, the selection does only change in the active layer)
      */
     public static Collection<SelectionChangedListener> selListeners = new LinkedList<SelectionChangedListener>();
 
     /**
-     * @return A collection containing all primitives of the dataset. The
-     * data is ordered after: first come nodes, then ways, then relations.
-     * Ordering in between the categories is not guaranteed.
+     * @return A collection containing all primitives of the dataset. The data is ordered after:
+     * first come nodes, then ways, then relations. Ordering in between the categories is not
+     * guaranteed.
      */
     public List<OsmPrimitive> allPrimitives() {
         List<OsmPrimitive> o = new LinkedList<OsmPrimitive>();
@@ -102,18 +99,16 @@ public class DataSet implements Cloneable {
             nodes.add((Node) osm);
         } else if (osm instanceof Way) {
             ways.add((Way) osm);
-        } else if (osm instanceof Relation) { 
+        } else if (osm instanceof Relation) {
             relations.add((Relation) osm);
         }
     }
 
     /**
      * Remove the selection of the whole dataset.
-     * @deprecated Use {@link #setSelected(Collection) setSelected}
-     * instead.
+     * @deprecated Use {@link #setSelected(Collection) setSelected} instead.
      */
-    @Deprecated
-    public void clearSelection() {
+    @Deprecated public void clearSelection() {
         clearSelection(nodes);
         clearSelection(ways);
         clearSelection(relations);
@@ -202,14 +197,15 @@ public class DataSet implements Cloneable {
     }
 
     /**
-     * Remember to fire an selection changed event. A call to this will not fire
-     * the event immediately. For more, @see SelectionChangedListener
+     * Remember to fire an selection changed event. A call to this will not fire the event
+     * immediately. For more,
+     * @see SelectionChangedListener
      */
     public static void fireSelectionChanged(Collection<? extends OsmPrimitive> sel) {
         for (SelectionChangedListener l : selListeners)
             l.selectionChanged(sel);
     }
-    
+
     @Override public DataSet clone() {
         DataSet ds = new DataSet();
         for (Node n : nodes)
@@ -222,46 +218,42 @@ public class DataSet implements Cloneable {
             ds.dataSources.add(new DataSource(source.bounds, source.origin));
         return ds;
     }
-    
+
     /**
      * Returns the total area of downloaded data (the "yellow rectangles").
      * @return Area object encompassing downloaded data.
      */
-    public Area getDataSourceArea()
-    {
+    public Area getDataSourceArea() {
+        if (dataSources.isEmpty()) return null;
         Area a = new Area();
         for (DataSource source : dataSources) {
             // create area from data bounds
             a.add(new Area(source.bounds.asRect()));
         }
         return a;
-        
     }
 
-    // Search für Relation wieder erlauben.
+    // Provide well-defined sorting for collections of OsmPrimitives.
+    // FIXME: probably not a good place to put this code. 
     public static OsmPrimitive[] sort(Collection<? extends OsmPrimitive> list) {
         OsmPrimitive[] selArr = new OsmPrimitive[list.size()];
         final HashMap<Object, String> h = new HashMap<Object, String>();
         selArr = list.toArray(selArr);
         Arrays.sort(selArr, new Comparator<OsmPrimitive>() {
-            public int compare(OsmPrimitive a, OsmPrimitive b)
-            {
-                if(a.getClass() == b.getClass())
-                {
+            public int compare(OsmPrimitive a, OsmPrimitive b) {
+                if (a.getClass() == b.getClass()) {
                     String as = h.get(a);
-                    if(as == null)
-                    {
+                    if (as == null) {
                         as = a.getName();
                         h.put(a, as);
                     }
                     String bs = h.get(b);
-                    if(bs == null)
-                    {
+                    if (bs == null) {
                         bs = b.getName();
                         h.put(b, bs);
                     }
                     int res = as.compareTo(bs);
-                    if(res != 0)
+                    if (res != 0)
                         return res;
                 }
                 return a.compareTo(b);
