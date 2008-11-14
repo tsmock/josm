@@ -9,9 +9,14 @@ import static org.openstreetmap.josm.tools.I18n.trn;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
@@ -66,7 +71,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class OsmDataLayer extends Layer {
 
     public final static class DataCountVisitor implements Visitor {
-        public final int[] normal = new int[3];		
+        public final int[] normal = new int[3];        
         public final int[] deleted = new int[3];
         public final String[] names = {"node", "way", "relation"};
 
@@ -120,17 +125,31 @@ public class OsmDataLayer extends Layer {
     public final LinkedList<DataChangeListener> listenerDataChanged = new LinkedList<DataChangeListener>();
 
     /**
+     * a paint texture for non-downloaded area
+     */
+    private TexturePaint hatched;
+    
+    /**
      * Construct a OsmDataLayer.
      */
     public OsmDataLayer(final DataSet data, final String name, final File associatedFile) {
         super(name);
         this.data = data;
         this.associatedFile = associatedFile;
+        
+        BufferedImage bi = new BufferedImage(15, 15, BufferedImage.TYPE_INT_RGB);
+        Graphics2D big = bi.createGraphics();
+        big.setColor(Main.pref.getColor(marktr("background"), Color.BLACK));
+        big.fillRect(0,0,15,15);
+        big.setColor(Main.pref.getColor(marktr("downloaded Area"), Color.YELLOW));
+        big.drawLine(0,15,15,0);
+        Rectangle r = new Rectangle(0, 0, 15,15);
+        hatched = new TexturePaint(bi, r);
     }
 
     /**
      * TODO: @return Return a dynamic drawn icon of the map data. The icon is
-     * 		updated by a background thread to not disturb the running programm.
+     *         updated by a background thread to not disturb the running programm.
      */
     @Override public Icon getIcon() {
         return ImageProvider.get("layer", "osmdata_small");
@@ -145,22 +164,25 @@ public class OsmDataLayer extends Layer {
         boolean inactive = Main.map.mapView.getActiveLayer() != this && Main.pref.getBoolean("draw.data.inactive_color", true);
         boolean virtual = !inactive && Main.map.mapView.useVirtualNodes();
         if (Main.pref.getBoolean("draw.data.downloaded_area", true)) {
-            // FIXME this is inefficient; instead a proper polygon has to be built, and instead
-            // of drawing the outline, the outlying areas should perhaps be shaded.
+            // initialize area with current viewport
+            Area b = new Area(Main.map.mapView.getBounds());
+
+            // now succesively subtract downloaded areas
             for (DataSource src : data.dataSources) {
                 if (src.bounds != null && !src.bounds.min.equals(src.bounds.max)) {
                     EastNorth en1 = Main.proj.latlon2eastNorth(src.bounds.min);
                     EastNorth en2 = Main.proj.latlon2eastNorth(src.bounds.max);
                     Point p1 = mv.getPoint(en1);
                     Point p2 = mv.getPoint(en2);
-                    Color color = inactive ? Main.pref.getColor(marktr("inactive"), Color.DARK_GRAY) :
-                            Main.pref.getColor(marktr("downloaded Area"), Color.YELLOW);
-                    g.setColor(color);
-                    g.drawRect(Math.min(p1.x,p2.x), Math.min(p1.y, p2.y), Math.abs(p2.x-p1.x), Math.abs(p2.y-p1.y));
+                    Rectangle r = new Rectangle(Math.min(p1.x, p2.x),Math.min(p1.y, p2.y),Math.abs(p2.x-p1.x),Math.abs(p2.y-p1.y));
+                    b.subtract(new Area(r));
                 }
             }
+            
+            // paint remainder
+            ((Graphics2D)g).setPaint(hatched);
+            ((Graphics2D)g).fill(b);
         }
-        
     
         SimplePaintVisitor painter;
         if (Main.pref.getBoolean("draw.wireframe"))
@@ -221,8 +243,8 @@ public class OsmDataLayer extends Layer {
      * after a successfull upload.
      * 
      * @param processed A list of all objects that were actually uploaded. 
-     * 		May be <code>null</code>, which means nothing has been uploaded but 
-     * 		saved to disk instead. Note that an empty collection for "processed"
+     *         May be <code>null</code>, which means nothing has been uploaded but 
+     *         saved to disk instead. Note that an empty collection for "processed"
      *      means that an upload has been attempted but failed.
      */
     public void cleanData(final Collection<OsmPrimitive> processed, boolean dataAdded) {
@@ -259,7 +281,7 @@ public class OsmDataLayer extends Layer {
      * 
      * @param it The iterator to change the modified and remove the items if deleted.
      * @param processed A list of all objects that have been successfully progressed.
-     * 		If the object in the iterator is not in the list, nothing will be changed on it.
+     *         If the object in the iterator is not in the list, nothing will be changed on it.
      */
     private void cleanIterator(final Iterator<? extends OsmPrimitive> it, final Collection<OsmPrimitive> processed) {
         final OsmPrimitive osm = it.next();
