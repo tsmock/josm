@@ -193,7 +193,7 @@ abstract public class Main {
 
     public Main() {
         main = this;
-//		platform = determinePlatformHook();
+//        platform = determinePlatformHook();
         platform.startupHook();
         contentPane.add(panel, BorderLayout.CENTER);
         panel.add(new GettingStarted(), BorderLayout.CENTER);
@@ -265,12 +265,16 @@ abstract public class Main {
             long tim = System.currentTimeMillis();
             long last = Main.pref.getLong("pluginmanager.lastupdate", 0);
             Integer maxTime = Main.pref.getInteger("pluginmanager.warntime", 30);
-            if (last <= 0) {
+            long d = (tim - last)/(24*60*60*1000l);
+            if ((last <= 0) || (maxTime <= 0)) {
                 Main.pref.put("pluginmanager.lastupdate",Long.toString(tim));
-            } else if (tim - last >= maxTime*1000l*24*60*60) {
-                long d = (tim - last)/(24*60*60*1000l);
+            } else if (d > maxTime) {
                 JOptionPane.showMessageDialog(Main.parent, 
-                    tr("Last plugin update more than {0} days ago.", d));
+                   "<html>" + 
+                   tr("Last plugin update more than {0} days ago.", d) +
+                   "<br><em>" + 
+                   tr("(You can change the number of days after which this warning appears<br>by setting the config option 'pluginmanager.warntime'.)") +
+                   "</html>");
             }
         }
 
