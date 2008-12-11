@@ -24,6 +24,7 @@ import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.RotateCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -171,7 +172,7 @@ public class SelectAction extends MapMode implements SelectionEnded {
         if (dx == 0 && dy == 0)
             return;
 
-        if (virtualWay != null)	{
+        if (virtualWay != null)    {
             Collection<Command> virtualCmds = new LinkedList<Command>();
             virtualCmds.add(new AddCommand(virtualNode));
             Way w = virtualWay.way;
@@ -334,21 +335,24 @@ public class SelectAction extends MapMode implements SelectionEnded {
                 selectPrims(
                     Main.map.mapView.getNearestCollection(e.getPoint()),
                     shift, ctrl);
-            } else if (ctrl) {
+            } else {
                 Collection<OsmPrimitive> selection = Main.ds.getSelected();
-                Collection<Node> affectedNodes = AllNodesVisitor.getAllNodes(selection);
-                Collection<Node> nn = Main.map.mapView.getNearestNodes(e.getPoint(), affectedNodes);
-                if (nn != null) {
-                    Node n = nn.iterator().next();
-                    LinkedList<Node> selNodes = new LinkedList<Node>();
-                    for (OsmPrimitive osm : selection)
-                        if (osm instanceof Node)
-                            selNodes.add((Node)osm);
-                    if (selNodes.size() > 0) {
-                        selNodes.add(n);
-                        MergeNodesAction.mergeNodes(selNodes, n);
+                if (ctrl) {
+                    Collection<Node> affectedNodes = AllNodesVisitor.getAllNodes(selection);
+                    Collection<Node> nn = Main.map.mapView.getNearestNodes(e.getPoint(), affectedNodes);
+                    if (nn != null) {
+                        Node n = nn.iterator().next();
+                        LinkedList<Node> selNodes = new LinkedList<Node>();
+                        for (OsmPrimitive osm : selection)
+                            if (osm instanceof Node)
+                                selNodes.add((Node)osm);
+                        if (selNodes.size() > 0) {
+                            selNodes.add(n);
+                            MergeNodesAction.mergeNodes(selNodes, n);
+                        }
                     }
                 }
+                DataSet.fireSelectionChanged(selection);
             }
         }
 
