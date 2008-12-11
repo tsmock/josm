@@ -1,17 +1,19 @@
 // License: GPL. Copyright 2007 by Immanuel Scholz and others
 package org.openstreetmap.josm.io;
 
-import java.io.PrintWriter;
+import java.io.BufferedWriter;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Map;
 
 import org.openstreetmap.josm.data.Bounds;
-
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxRoute;
 import org.openstreetmap.josm.data.gpx.GpxLink;
+import org.openstreetmap.josm.data.gpx.GpxRoute;
+import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
@@ -23,8 +25,8 @@ public class GpxWriter extends XmlWriter {
         super(out);
     }
 
-    public GpxWriter(OutputStream out) {
-        super(new PrintWriter(out));
+    public GpxWriter(OutputStream out) throws UnsupportedEncodingException {
+        super(new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "UTF-8"))));
     }
 
     public GpxWriter() {
