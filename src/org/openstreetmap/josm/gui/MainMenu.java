@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AboutAction;
+import org.openstreetmap.josm.actions.AddNodeAction;
 import org.openstreetmap.josm.actions.AlignInCircleAction;
 import org.openstreetmap.josm.actions.AlignInLineAction;
 import org.openstreetmap.josm.actions.OrthogonalizeAction;
@@ -63,11 +64,11 @@ import org.openstreetmap.josm.data.DataSetChecker;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * This is the JOSM main menu bar. It is overwritten to initialize itself and provide
- * all menu entries as member variables (sort of collect them).
- *
+ * This is the JOSM main menu bar. It is overwritten to initialize itself and provide all menu
+ * entries as member variables (sort of collect them).
+ * 
  * It also provides possibilities to attach new menu entries (used by plugins).
- *
+ * 
  * @author Immanuel.Scholz
  */
 public class MainMenu extends JMenuBar {
@@ -85,6 +86,7 @@ public class MainMenu extends JMenuBar {
     /* Edit menu */
     public final UndoAction undo = new UndoAction();
     public final RedoAction redo = new RedoAction();
+    public final AddNodeAction addnode = new AddNodeAction();
     public final JosmAction copy = new CopyAction();
     public final JosmAction paste = new PasteAction();
     public final JosmAction delete = new DeleteAction();
@@ -135,10 +137,9 @@ public class MainMenu extends JMenuBar {
 
     /**
      * Add a JosmAction to a menu.
-     *
-     * This method handles all the shortcut handling.
-     * It also makes sure that actions that are handled by the
-     * OS are not duplicated on the menu.
+     * 
+     * This method handles all the shortcut handling. It also makes sure that actions that are
+     * handled by the OS are not duplicated on the menu.
      */
     public static void add(JMenu menu, JosmAction action) {
         if (!action.getShortcut().getAutomatic()) {
@@ -152,11 +153,12 @@ public class MainMenu extends JMenuBar {
 
     /**
      * Add a menu to the main menu.
-     *
+     * 
      * This method handles all the shortcut handling.
      */
     public void add(JMenu menu, int mnemonicKey, String shortName) {
-        Shortcut.registerShortcut("menu:"+shortName, tr("Menu: {0}", menu.getText()), mnemonicKey, Shortcut.GROUP_MNEMONIC).setMnemonic(menu);
+        Shortcut.registerShortcut("menu:" + shortName, tr("Menu: {0}", menu.getText()), mnemonicKey,
+                Shortcut.GROUP_MNEMONIC).setMnemonic(menu);
         add(menu);
     }
 
@@ -178,6 +180,7 @@ public class MainMenu extends JMenuBar {
         add(editMenu, undo);
         add(editMenu, redo);
         editMenu.addSeparator();
+        add(editMenu, addnode);
         add(editMenu, copy);
         add(editMenu, delete);
         add(editMenu, paste);
@@ -203,7 +206,8 @@ public class MainMenu extends JMenuBar {
         // TODO move code to an "action" like the others?
         final JCheckBoxMenuItem wireframe = new JCheckBoxMenuItem(tr("Wireframe view"));
         wireframe.setSelected(Main.pref.getBoolean("draw.wireframe", false));
-        wireframe.setAccelerator(Shortcut.registerShortcut("menu:view:wireframe", "Toggle Wireframe view", KeyEvent.VK_W, Shortcut.GROUP_MENU).getKeyStroke());
+        wireframe.setAccelerator(Shortcut.registerShortcut("menu:view:wireframe", "Toggle Wireframe view",
+                KeyEvent.VK_W, Shortcut.GROUP_MENU).getKeyStroke());
         wireframe.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 Main.pref.put("draw.wireframe", wireframe.isSelected());
@@ -231,7 +235,7 @@ public class MainMenu extends JMenuBar {
         add(toolsMenu, unglueNodes);
         add(toolsMenu, KeyEvent.VK_T, "tools");
 
-        if (! Main.pref.getBoolean("audio.menuinvisible")) {
+        if (!Main.pref.getBoolean("audio.menuinvisible")) {
             add(audioMenu, audioPlayPause);
             add(audioMenu, audioNext);
             add(audioMenu, audioPrev);
@@ -245,14 +249,15 @@ public class MainMenu extends JMenuBar {
         add(presetsMenu, KeyEvent.VK_P, "presets");
 
         JMenuItem check = new JMenuItem("DEBUG: Check Dataset");
-        check.addActionListener(new ActionListener(){
+        check.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 DataSetChecker.check();
             }
         });
         helpMenu.add(check);
         current = helpMenu.add(help); // why is help not a JosmAction?
-        current.setAccelerator(Shortcut.registerShortcut("system:help", tr("Help"), KeyEvent.VK_F1, Shortcut.GROUP_DIRECT).getKeyStroke());
+        current.setAccelerator(Shortcut.registerShortcut("system:help", tr("Help"), KeyEvent.VK_F1,
+                Shortcut.GROUP_DIRECT).getKeyStroke());
         add(helpMenu, about);
         add(helpMenu, historyinfo);
         add(helpMenu, KeyEvent.VK_H, "help");
