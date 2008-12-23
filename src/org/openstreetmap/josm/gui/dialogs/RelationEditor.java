@@ -109,7 +109,7 @@ public class RelationEditor extends JFrame {
 
     // =================== FIXME FIXME FIXME =====================
     // As soon as API 0.5 is dead, drop all the collation stuff from here ...
-    
+
     /**
      * Collator for sorting the roles and entries of the member table.
      */
@@ -176,13 +176,13 @@ public class RelationEditor extends JFrame {
 
     // =================== FIXME FIXME FIXME =====================
     // ... until here, and also get rid of the "Collections.sort..." below.
-    
+
     /**
      * Creates a new relation editor for the given relation. The relation
      * will be saved if the user selects "ok" in the editor.
-     * 
+     *
      * If no relation is given, will create an editor for a new relation.
-     * 
+     *
      * @param relation relation to edit, or null to create a new one.
      */
     public RelationEditor(Relation relation)
@@ -193,9 +193,9 @@ public class RelationEditor extends JFrame {
     /**
      * Creates a new relation editor for the given relation. The relation
      * will be saved if the user selects "ok" in the editor.
-     * 
+     *
      * If no relation is given, will create an editor for a new relation.
-     * 
+     *
      * @param relation relation to edit, or null to create a new one.
      */
     public RelationEditor(Relation relation, Collection<RelationMember> selectedMembers )
@@ -206,7 +206,7 @@ public class RelationEditor extends JFrame {
         this.relation = relation;
 
         ordered = Main.pref.get("osm-server.version", "0.5").equals("0.6");
-        
+
         if (relation == null) {
             // create a new relation
             this.clone = new Relation();
@@ -303,7 +303,7 @@ public class RelationEditor extends JFrame {
             JPanel upDownPanel = new JPanel();
             upDownPanel.setLayout(new BoxLayout(upDownPanel, BoxLayout.Y_AXIS));
 
-            
+
 
             upDownPanel.add(createButton(null, "moveup", tr("Move the currently selected member(s) up"),
                     KeyEvent.VK_U, new ActionListener() {
@@ -318,13 +318,13 @@ public class RelationEditor extends JFrame {
                 }
             }));
 
-            
+
             bothTables.add(new JScrollPane(memberTable), GBC.std().fill(GBC.BOTH));
             bothTables.add(upDownPanel, GBC.eol().fill(GBC.VERTICAL));
         } else {
             bothTables.add(new JScrollPane(memberTable), GBC.eol().fill(GBC.BOTH));
         }
-        
+
         JPanel buttonPanel = new JPanel(new GridLayout(1,3));
 
         buttonPanel.add(createButton(marktr("Add Selected"),"addselected",
@@ -392,7 +392,7 @@ public class RelationEditor extends JFrame {
 
         if (selectedMembers != null) {
             boolean scrolled = false;
-            for (int i = 0; i < memberData.getRowCount(); i++) {		
+            for (int i = 0; i < memberData.getRowCount(); i++) {
                 for (RelationMember m : selectedMembers) {
                     if (m.member == memberData.getValueAt(i, 1)
                             && m.role.equals(memberData.getValueAt(i, 0))) {
@@ -405,8 +405,8 @@ public class RelationEditor extends JFrame {
                         break;
                     }
                 }
-                
-            }	
+
+            }
         }
 
         setSize(new Dimension(600, 500));
@@ -493,20 +493,20 @@ public class RelationEditor extends JFrame {
     private void moveMembers(int direction) {
         int[] rows = memberTable.getSelectedRows();
         if (rows.length == 0) return;
-        
+
         // check if user attempted to move anything beyond the boundary of the list
         if (rows[0] + direction < 0) return;
         if (rows[rows.length-1] + direction >= clone.members.size()) return;
-        
+
         RelationMember m[] = new RelationMember[clone.members.size()];
-        
+
         // first move all selected rows from the member list into a new array,
         // displaced by the move amount
         for (Integer i: rows) {
             m[i+direction] = clone.members.get(i);
-            clone.members.set(i, null);            
+            clone.members.set(i, null);
         }
-        
+
         // now fill the empty spots in the destination array with the remaining
         // elements.
         int i = 0;
@@ -516,10 +516,10 @@ public class RelationEditor extends JFrame {
                 m[i++] = rm;
             }
         }
-        
+
         // and write the array back into the member list.
         clone.members.clear();
-        clone.members.addAll(Arrays.asList(m));        
+        clone.members.addAll(Arrays.asList(m));
         refreshTables();
         ListSelectionModel lsm = memberTable.getSelectionModel();
         lsm.setValueIsAdjusting(true);

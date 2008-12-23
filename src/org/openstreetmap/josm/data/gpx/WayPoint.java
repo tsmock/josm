@@ -30,13 +30,13 @@ public class WayPoint extends WithAttributes implements Comparable<WayPoint>
     public String toString() {
         return "WayPoint (" + (attr.containsKey("name") ? attr.get("name") + ", " :"") + latlon.toString() + ", " + attr + ")";
     }
-    
+
     /**
      * Convert the time stamp of the waypoint into seconds from the epoch
      */
-    public final static SimpleDateFormat GPXTIMEFMT = 
+    public final static SimpleDateFormat GPXTIMEFMT =
         new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); // ignore timezone
-    
+
     public void setTime() {
         if (! attr.containsKey("time")) {
             return;
@@ -48,12 +48,12 @@ public class WayPoint extends WithAttributes implements Comparable<WayPoint>
     }
 
     /**
-     * Convert a time stamp of the waypoint from the <cmt> or <desc> field 
-     * into seconds from the epoch. Handles the date format as it is used by 
+     * Convert a time stamp of the waypoint from the <cmt> or <desc> field
+     * into seconds from the epoch. Handles the date format as it is used by
      * Garmin handhelds. Does not overwrite an existing timestamp (!= 0.0).
      * A value of <time> fields overwrites values set with by method.
      * Does nothing if specified key does not exist or text cannot be parsed.
-     * 
+     *
      * @param key The key that contains the text to convert.
      */
     public void setGarminCommentTime(String key) {

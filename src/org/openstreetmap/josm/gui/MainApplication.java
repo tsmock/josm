@@ -169,11 +169,11 @@ public class MainApplication extends Main {
         Main.pref.put("downloaded Area", null);
 
         String localeName = null; //The locale to use
-        
+
         //Check if passed as parameter
-        if(args.containsKey("language")) 
+        if(args.containsKey("language"))
             localeName = (String)(args.get("language").toArray()[0]);
-        
+
         if (localeName == null) {
             localeName = Main.pref.get("language", null);
         }
@@ -193,7 +193,7 @@ public class MainApplication extends Main {
         } catch (MissingResourceException ex) {
             System.out.println("Unable to find translation for the locale: " + Locale.getDefault().getDisplayName() + " reverting to English.");
         }
-        
+
         SplashScreen splash = new SplashScreen(Main.pref.getBoolean("draw.splashscreen", true));
 
         splash.setStatus(tr("Activating updated plugins"));

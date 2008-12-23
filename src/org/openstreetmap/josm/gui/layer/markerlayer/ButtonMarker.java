@@ -16,30 +16,30 @@ import org.openstreetmap.josm.gui.MapView;
 
 /**
  * Marker class with button look-and-feel.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  *
  */
 public class ButtonMarker extends Marker {
 
     private Rectangle buttonRectangle;
-    
+
     public ButtonMarker(LatLon ll, String buttonImage, MarkerLayer parentLayer, double time, double offset) {
         super(ll, null, buttonImage, parentLayer, time, offset);
         buttonRectangle = new Rectangle(0, 0, symbol.getIconWidth(), symbol.getIconHeight());
     }
-    
+
     public ButtonMarker(LatLon ll, String text, String buttonImage, MarkerLayer parentLayer, double time, double offset) {
         super(ll, text, buttonImage, parentLayer, time, offset);
         buttonRectangle = new Rectangle(0, 0, symbol.getIconWidth(), symbol.getIconHeight());
     }
-    
+
     @Override public boolean containsPoint(Point p) {
         Point screen = Main.map.mapView.getPoint(eastNorth);
         buttonRectangle.setLocation(screen.x+4, screen.y+2);
         return buttonRectangle.contains(p);
     }
-    
+
     @Override public void paint(Graphics g, MapView mv, boolean mousePressed, String show) {
         if (! show.equalsIgnoreCase("show")) {
             super.paint(g, mv, mousePressed, show);
@@ -50,7 +50,7 @@ public class ButtonMarker extends Marker {
         symbol.paintIcon(mv, g, screen.x+4, screen.y+2);
         Border b;
         Point mousePosition = mv.getMousePosition();
-        
+
         if (mousePosition != null) {
             // mouse is inside the window
             if (mousePressed) {

@@ -48,12 +48,12 @@ public class PreferenceDialog extends JTabbedPane {
 
     /**
      * Construct a JPanel for the preference settings. Layout is GridBagLayout
-     * and a centered title label and the description are added. The panel 
-     * will be shown inside a {@link ScrollPane} 
+     * and a centered title label and the description are added. The panel
+     * will be shown inside a {@link ScrollPane}
      * @param icon The name of the icon.
      * @param title The title of this preference tab.
      * @param desc A description in one sentence for this tab. Will be displayed
-     * 		italic under the title.
+     *      italic under the title.
      * @return The created panel ready to add other controls.
      */
     public JPanel createPreferenceTab(String icon, String title, String desc) {
@@ -67,7 +67,7 @@ public class PreferenceDialog extends JTabbedPane {
      * @param title The title of this preference tab.
      * @param desc A description in one sentence for this tab. Will be displayed
      *      italic under the title.
-     * @param inScrollPane if <code>true</code> the added tab will show scroll bars 
+     * @param inScrollPane if <code>true</code> the added tab will show scroll bars
      *        if the panel content is larger than the available space
      * @return The created panel ready to add other controls.
      */

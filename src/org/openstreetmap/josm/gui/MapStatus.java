@@ -60,13 +60,13 @@ public class MapStatus extends JPanel implements Helpful {
      * The MapView this status belongs to.
      */
     final MapView mv;
-    
-    /** 
+
+    /**
      * A small user interface component that consists of an image label and
      * a fixed text content to the right of the image.
      */
     class ImageLabel extends JPanel {
-        private JLabel tf; 
+        private JLabel tf;
         private int chars;
         public ImageLabel(String img, String tooltip, int chars) {
             super();
@@ -84,7 +84,7 @@ public class MapStatus extends JPanel implements Helpful {
             return new Dimension(25 + chars*tf.getFontMetrics(tf.getFont()).charWidth('0'), super.getPreferredSize().height);
         }
         @Override public Dimension getMinimumSize() {
-            return new Dimension(25 + chars*tf.getFontMetrics(tf.getFont()).charWidth('0'), super.getMinimumSize().height);	
+            return new Dimension(25 + chars*tf.getFontMetrics(tf.getFont()).charWidth('0'), super.getMinimumSize().height);
         }
     }
 
@@ -254,7 +254,7 @@ public class MapStatus extends JPanel implements Helpful {
      */
     public MapStatus(final MapFrame mapFrame) {
         this.mv = mapFrame.mapView;
-        
+
         try {
             mCord = LatLon.CoordinateFormat.valueOf(Main.pref.get("coordinates"));
         } catch (IllegalArgumentException iae) {
@@ -289,7 +289,7 @@ public class MapStatus extends JPanel implements Helpful {
         helpText.setEditable(false);
         add(nameText, GBC.std().insets(3,0,0,0));
         add(helpText, GBC.eol().insets(3,0,0,0).fill(GBC.HORIZONTAL));
-        
+
         // The background thread
         final Collector collector = new Collector(mapFrame);
         new Thread(collector).start();
@@ -340,7 +340,7 @@ public class MapStatus extends JPanel implements Helpful {
     public String helpTopic() {
         return "Statusline";
     }
-    
+
     public void setHelpText(String t) {
         helpText.setText(t);
         helpText.setToolTipText(t);
@@ -355,5 +355,5 @@ public class MapStatus extends JPanel implements Helpful {
         String text = dist > 1000 ? (Math.round(dist/100)/10.0)+" km" : Math.round(dist*10)/10.0 +" m";
         distText.setText(dist < 0 ? "--" : text);
     }
-    
+
 }

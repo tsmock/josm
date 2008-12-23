@@ -20,7 +20,7 @@ public abstract class CorrectionTableModel<C extends Correction> extends
         this.corrections = corrections;
         apply = new boolean[this.corrections.size()];
         Arrays.fill(apply, true);
-        applyColumn = getColumnCount() - 1; 
+        applyColumn = getColumnCount() - 1;
     }
 
     abstract public int getColumnCount();
@@ -32,11 +32,11 @@ public abstract class CorrectionTableModel<C extends Correction> extends
     public List<C> getCorrections() {
         return corrections;
     }
-    
+
     public int getApplyColumn() {
         return applyColumn;
     }
-    
+
     public boolean getApply(int i) {
         return apply[i];
     }
@@ -56,7 +56,7 @@ public abstract class CorrectionTableModel<C extends Correction> extends
     public String getColumnName(int columnIndex) {
         if (columnIndex == applyColumn)
             return tr("Apply?");
-        
+
         return getCorrectionColumnName(columnIndex);
     }
 
@@ -74,7 +74,7 @@ public abstract class CorrectionTableModel<C extends Correction> extends
     public Object getValueAt(int rowIndex, int colIndex) {
         if (colIndex == applyColumn)
             return apply[rowIndex];
-        
+
         return getCorrectionValueAt(rowIndex, colIndex);
     }
 }

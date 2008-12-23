@@ -9,10 +9,10 @@ import org.openstreetmap.josm.data.coor.LatLon;
 /**
  * Implement Mercator Projection code, coded after documentation
  * from wikipedia.
- * 
- * The center of the mercator projection is always the 0 grad 
+ *
+ * The center of the mercator projection is always the 0 grad
  * coordinate.
- * 
+ *
  * @author imi
  */
 public class Mercator implements Projection {

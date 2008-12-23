@@ -51,8 +51,8 @@ public class ImageProvider {
     /**
      * Return an image from the specified location.
      *
-     * @param subdir	The position of the directory, e.g. "layer"
-     * @param name		The icons name (without the ending of ".png")
+     * @param subdir    The position of the directory, e.g. "layer"
+     * @param name      The icons name (without the ending of ".png")
      * @return The requested Image.
      */
     public static ImageIcon get(String subdir, String name) {
@@ -105,7 +105,7 @@ public class ImageProvider {
             img = Toolkit.getDefaultToolkit().createImage(path);
             cache.put(cache_name, img);
         }
-    
+
         return new ImageIcon(img);
     }
 

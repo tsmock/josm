@@ -42,13 +42,13 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * A layer holding markers.
- * 
+ *
  * Markers are GPS points with a name and, optionally, a symbol code attached;
  * marker layers can be created from waypoints when importing raw GPS data,
  * but they may also come from other sources.
- * 
+ *
  * The symbol code is for future use.
- * 
+ *
  * The data is read only.
  */
 public class MarkerLayer extends Layer {
@@ -59,7 +59,7 @@ public class MarkerLayer extends Layer {
     public final Collection<Marker> data;
     private boolean mousePressed = false;
     public GpxLayer fromLayer = null;
-    
+
     /*
     private Icon audioTracerIcon = null;
     private EastNorth playheadPosition = null;
@@ -68,7 +68,7 @@ public class MarkerLayer extends Layer {
     private static double playheadTime = -1.0;
      */
     public MarkerLayer(GpxData indata, String name, File associatedFile, GpxLayer fromLayer) {
-        
+
         super(name);
         this.associatedFile = associatedFile;
         this.data = new ArrayList<Marker>();
@@ -98,7 +98,7 @@ public class MarkerLayer extends Layer {
             if (m != null)
                 data.add(m);
         }
-        
+
         SwingUtilities.invokeLater(new Runnable(){
             public void run() {
                 Main.map.mapView.addMouseListener(new MouseAdapter() {
@@ -152,7 +152,7 @@ public class MarkerLayer extends Layer {
         String mkrTextShow = Main.pref.get("marker.show "+name, "show");
 
         g.setColor(Main.pref.getColor(marktr("gps marker"), "layer "+name, Color.gray));
-        
+
         for (Marker mkr : data) {
             if (mousePos != null && mkr.containsPoint(mousePos)) {
                 mkr.paint(g, mv, mousePressedTmp, mkrTextShow);
@@ -251,7 +251,7 @@ public class MarkerLayer extends Layer {
         components.add(syncaudio);
         if (Main.pref.getBoolean("marker.traceaudio", true)) {
             components.add (moveaudio);
-        }		
+        }
         components.add(new JMenuItem(new RenameLayerAction(associatedFile, this)));
         components.add(new JSeparator());
         components.add(new JMenuItem(new LayerListPopup.InfoAction(this)));
@@ -273,7 +273,7 @@ public class MarkerLayer extends Layer {
         }
         if (startMarker == null)
             return false;
-            
+
         // apply adjustment to all subsequent audio markers in the layer
         double adjustment = AudioPlayer.position() - startMarker.offset; // in seconds
         boolean seenStart = false;
@@ -289,11 +289,11 @@ public class MarkerLayer extends Layer {
         }
         return true;
     }
-    
+
     public AudioMarker addAudioMarker(double time, EastNorth en) {
         // find first audio marker to get absolute start time
         double offset = 0.0;
-        AudioMarker am = null; 
+        AudioMarker am = null;
         for (Marker m : data) {
             if (m.getClass() == AudioMarker.class) {
                 am = (AudioMarker)m;
@@ -307,7 +307,7 @@ public class MarkerLayer extends Layer {
         }
 
         // make our new marker
-        AudioMarker newAudioMarker = AudioMarker.create(Main.proj.eastNorth2latlon(en), 
+        AudioMarker newAudioMarker = AudioMarker.create(Main.proj.eastNorth2latlon(en),
             AudioMarker.inventName(offset), AudioPlayer.url().toString(), this, time, offset);
 
         // insert it at the right place in a copy the collection
@@ -337,7 +337,7 @@ public class MarkerLayer extends Layer {
         data.addAll(newData);
         return ret;
     }
-    
+
     public static void playAudio() {
         if (Main.map == null || Main.map.mapView == null)
             return;
@@ -357,11 +357,11 @@ public class MarkerLayer extends Layer {
     public static void playNextMarker() {
         playAdjacentMarker(true);
     }
-    
+
     public static void playPreviousMarker() {
         playAdjacentMarker(false);
     }
-    
+
     private static void playAdjacentMarker(boolean next) {
         Marker startMarker = AudioMarker.recentlyPlayedMarker();
         if (startMarker == null) {
@@ -400,5 +400,5 @@ public class MarkerLayer extends Layer {
             }
         }
     }
-    
+
 }

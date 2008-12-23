@@ -7,7 +7,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * Exception that wraps any exception thrown by plugins. It is used in the JOSM main system
  * and there is no particular reason to use this within the plugin itself (although there
  * is also no reason against this.. ;)
- * 
+ *
  * @author Immanuel.Scholz
  */
 public class PluginException extends RuntimeException {

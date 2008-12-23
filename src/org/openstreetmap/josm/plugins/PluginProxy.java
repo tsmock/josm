@@ -43,7 +43,7 @@ public class PluginProxy extends Plugin {
             throw new PluginException(this, info.name, e);
         }
     }
-    
+
     @Override public void addDownloadSelection(List<DownloadSelection> list) {
         try {
             plugin.getClass().getMethod("addDownloadSelection", List.class).invoke(plugin, list);

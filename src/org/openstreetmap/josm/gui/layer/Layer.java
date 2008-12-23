@@ -16,17 +16,17 @@ import org.openstreetmap.josm.tools.Destroyable;
 
 /**
  * A layer encapsulates the gui componente of one dataset and its representation.
- * 
- * Some layers may display data directly importet from OSM server. Other only 
- * display background images. Some can be edited, some not. Some are static and 
+ *
+ * Some layers may display data directly importet from OSM server. Other only
+ * display background images. Some can be edited, some not. Some are static and
  * other changes dynamically (auto-updated).
  *
  * Layers can be visible or not. Most actions the user can do applies only on
  * selected layers. The available actions depend on the selected layers too.
- * 
- * All layers are managed by the MapView. They are displayed in a list to the 
+ *
+ * All layers are managed by the MapView. They are displayed in a list to the
  * right of the screen.
- * 
+ *
  * @author imi
  */
 abstract public class Layer implements Destroyable, MapViewPaintable {
@@ -79,7 +79,7 @@ abstract public class Layer implements Destroyable, MapViewPaintable {
      */
     abstract public void paint(Graphics g, MapView mv);
     /**
-     * Return a representative small image for this layer. The image must not 
+     * Return a representative small image for this layer. The image must not
      * be larger than 64 pixel in any dimension.
      */
     abstract public Icon getIcon();
@@ -93,11 +93,11 @@ abstract public class Layer implements Destroyable, MapViewPaintable {
      * Merges the given layer into this layer. Throws if the layer types are
      * incompatible.
      * @param from The layer that get merged into this one. After the merge,
-     * 		the other layer is not usable anymore and passing to one others
-     * 		mergeFrom should be one of the last things to do with a layer.
+     *      the other layer is not usable anymore and passing to one others
+     *      mergeFrom should be one of the last things to do with a layer.
      */
     abstract public void mergeFrom(Layer from);
-    
+
     /**
      * @param other The other layer that is tested to be mergable with this.
      * @return Whether the other layer can be merged into this layer.
@@ -107,13 +107,13 @@ abstract public class Layer implements Destroyable, MapViewPaintable {
     abstract public void visitBoundingBox(BoundingXYVisitor v);
 
     abstract public Object getInfoComponent();
-    
+
     abstract public Component[] getMenuEntries();
-    
+
     /**
      * Called, when the layer is removed from the mapview and is going to be
      * destroyed.
-     * 
+     *
      * This is because the Layer constructor can not add itself safely as listener
      * to the layerlist dialog, because there may be no such dialog yet (loaded
      * via command line parameter).

@@ -69,7 +69,7 @@ public class DrawingPreference implements PreferenceSetting {
         forceRawGpsLines.setSelected(Main.pref.getBoolean("draw.rawgps.lines.force"));
         forceRawGpsLines.setEnabled(drawRawGpsLines.isSelected());
         panel.add(forceRawGpsLines, GBC.eop().insets(40,0,0,0));
-        
+
         // drawGpsArrows
         drawGpsArrows.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -100,12 +100,12 @@ public class DrawingPreference implements PreferenceSetting {
         colorTracks.setToolTipText(tr("Choose the hue for the track color by the velocity at that point."));
         colorTracks.setEnabled(drawRawGpsLines.isSelected());
         panel.add(colorTracks, GBC.eop().insets(40,0,0,0));
-        
+
         // largeGpsPoints
         largeGpsPoints.setSelected(Main.pref.getBoolean("draw.rawgps.large"));
         largeGpsPoints.setToolTipText(tr("Draw larger dots for the GPS points."));
         panel.add(largeGpsPoints, GBC.eop().insets(20,0,0,0));
-        
+
         panel.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.BOTH));
         JScrollPane scrollpane = new JScrollPane(panel);
         scrollpane.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
@@ -133,17 +133,17 @@ public class DrawingPreference implements PreferenceSetting {
         interestingDirections.setSelected(Main.pref.getBoolean("draw.segment.relevant_directions_only"));
         interestingDirections.setEnabled(directionHint.isSelected());
         panel.add(interestingDirections, GBC.eop().insets(40,0,0,0));
-        
+
         // segment order number
         segmentOrderNumber.setToolTipText(tr("Draw the order numbers of all segments within their way."));
         segmentOrderNumber.setSelected(Main.pref.getBoolean("draw.segment.order_number"));
         panel.add(segmentOrderNumber, GBC.eop().insets(20,0,0,0));
-        
+
         // antialiasing
         useAntialiasing.setToolTipText(tr("Apply antialiasing to the map view resulting in a smoother appearance."));
         useAntialiasing.setSelected(Main.pref.getBoolean("mappaint.use-antialiasing"));
         panel.add(useAntialiasing, GBC.eop().insets(20,0,0,0));
-        
+
         // downloaded area
         sourceBounds.setToolTipText(tr("Draw the boundaries of data loaded from the server."));
         sourceBounds.setSelected(Main.pref.getBoolean("draw.data.downloaded_area", true));
@@ -181,7 +181,7 @@ public class DrawingPreference implements PreferenceSetting {
         Main.pref.put("draw.data.inactive_color", inactive.isSelected());
         Main.pref.put("mappaint.use-antialiasing", useAntialiasing.isSelected());
         int vn = Main.pref.getInteger("mappaint.node.virtual-size", 8);
-        if(virtualNodes.isSelected()) {	if (vn < 1) vn = 8; }
+        if(virtualNodes.isSelected()) { if (vn < 1) vn = 8; }
         else { vn = 0; }
         Main.pref.put("mappaint.node.virtual-size", Integer.toString(vn));
     }

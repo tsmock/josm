@@ -12,9 +12,9 @@ import java.text.NumberFormat;
 
 /**
  * LatLon are unprojected latitude / longitude coordinates.
- * 
+ *
  * This class is immutable.
- * 
+ *
  * @author Imi
  */
 public class LatLon extends Coordinate {
@@ -22,16 +22,16 @@ public class LatLon extends Coordinate {
     private static DecimalFormat cDmsMinuteFormatter = new DecimalFormat("00");
     private static DecimalFormat cDmsSecondFormatter = new DecimalFormat("00.0");
     private static DecimalFormat cDdFormatter = new DecimalFormat("###0.0000");
-    
-    /** 
-     * Possible ways to display coordinates 
-     */ 
-    public enum CoordinateFormat { 
-        DECIMAL_DEGREES {public String toString() {return tr("Decimal Degrees");}},  
-        DEGREES_MINUTES_SECONDS {public String toString() {return tr("Degrees Minutes Seconds");}}; 
-    } 
-    
-    public static String dms(double pCoordinate) { 
+
+    /**
+     * Possible ways to display coordinates
+     */
+    public enum CoordinateFormat {
+        DECIMAL_DEGREES {public String toString() {return tr("Decimal Degrees");}},
+        DEGREES_MINUTES_SECONDS {public String toString() {return tr("Degrees Minutes Seconds");}};
+    }
+
+    public static String dms(double pCoordinate) {
 
         double tAbsCoord = Math.abs(pCoordinate);
         int tDegree = (int) tAbsCoord;
@@ -39,9 +39,9 @@ public class LatLon extends Coordinate {
         int tMinutes = (int) tTmpMinutes;
         double tSeconds = (tTmpMinutes - tMinutes) * 60;
 
-        return tDegree + "\u00B0" + cDmsMinuteFormatter.format(tMinutes) + "\'" 
+        return tDegree + "\u00B0" + cDmsMinuteFormatter.format(tMinutes) + "\'"
             + cDmsSecondFormatter.format(tSeconds) + "\"";
-    } 
+    }
 
     public LatLon(double lat, double lon) {
         super(lon, lat);
@@ -50,7 +50,7 @@ public class LatLon extends Coordinate {
     public double lat() {
         return y;
     }
-    
+
     public String latToString(CoordinateFormat d) {
         switch(d) {
         case DECIMAL_DEGREES: return cDdFormatter.format(y);
@@ -58,11 +58,11 @@ public class LatLon extends Coordinate {
         default: return "ERR";
         }
     }
-    
+
     public double lon() {
         return x;
     }
-    
+
     public String lonToString(CoordinateFormat d) {
         switch(d) {
         case DECIMAL_DEGREES: return cDdFormatter.format(x);
@@ -70,8 +70,8 @@ public class LatLon extends Coordinate {
         default: return "ERR";
         }
     }
-    
-  
+
+
 
     /**
      * @return <code>true</code> if the other point has almost the same lat/lon
@@ -88,7 +88,7 @@ public class LatLon extends Coordinate {
      * by using lat/lon.
      */
     public boolean isOutSideWorld() {
-        return lat() < -Projection.MAX_LAT || lat() > Projection.MAX_LAT || 
+        return lat() < -Projection.MAX_LAT || lat() > Projection.MAX_LAT ||
             lon() < -Projection.MAX_LON || lon() > Projection.MAX_LON;
     }
 
@@ -98,7 +98,7 @@ public class LatLon extends Coordinate {
     public boolean isWithin(Bounds b) {
         return lat() >= b.min.lat() && lat() <= b.max.lat() && lon() > b.min.lon() && lon() < b.max.lon();
     }
-    
+
     /**
      * Computes the distance between this lat/lon and another point on the earth.
      * Uses spherical law of cosines formula, not Haversine.
@@ -107,17 +107,17 @@ public class LatLon extends Coordinate {
      */
     public double greatCircleDistance(LatLon other) {
         return (Math.acos(
-            Math.sin(Math.toRadians(lat())) * Math.sin(Math.toRadians(other.lat())) + 
+            Math.sin(Math.toRadians(lat())) * Math.sin(Math.toRadians(other.lat())) +
             Math.cos(Math.toRadians(lat()))*Math.cos(Math.toRadians(other.lat())) *
                           Math.cos(Math.toRadians(other.lon()-lon()))) * 6378135);
     }
-    
+
     /**
-     * Returns the heading, in radians, that you have to use to get from 
+     * Returns the heading, in radians, that you have to use to get from
      * this lat/lon to another.
-     * 
+     *
      * @param other the "destination" position
-     * @return heading 
+     * @return heading
      */
     public double heading(LatLon other) {
         double rv;
@@ -133,7 +133,7 @@ public class LatLon extends Coordinate {
 
     /**
      * Returns this lat/lon pair in human-readable format.
-     * 
+     *
      * @return String in the format "lat=1.23456°, lon=2.34567°"
      */
     public String toDisplayString() {
@@ -141,7 +141,7 @@ public class LatLon extends Coordinate {
         nf.setMaximumFractionDigits(5);
         return "lat=" + nf.format(lat()) + "°, lon=" + nf.format(lon()) + "°";
     }
-    
+
     @Override public String toString() {
         return "LatLon[lat="+lat()+",lon="+lon()+"]";
     }

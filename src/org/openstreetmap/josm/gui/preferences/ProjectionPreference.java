@@ -25,7 +25,7 @@ public class ProjectionPreference implements PreferenceSetting {
     private JComboBox coordinatesCombo = new JComboBox(CoordinateFormat.values());
 
     public void addGui(PreferenceDialog gui) {
-        
+
         for (int i = 0; i < projectionCombo.getItemCount(); ++i) {
             if (projectionCombo.getItemAt(i).getClass().getName().equals(Main.pref.get("projection"))) {
                 projectionCombo.setSelectedIndex(i);
@@ -42,7 +42,7 @@ public class ProjectionPreference implements PreferenceSetting {
 
         projectionCombo.addActionListener(gui.requireRestartAction);
         coordinatesCombo.addActionListener(gui.requireRestartAction);
-        
+
         JPanel projPanel = new JPanel();
         projPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray), tr("Map Projection")));
         projPanel.setLayout(new GridBagLayout());

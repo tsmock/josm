@@ -13,13 +13,13 @@ import org.openstreetmap.josm.tools.GBC;
 /**
  * Out of pure laziness, I add the file stuff to connection tab.
  * Feel free to fix this.
- * 
+ *
  * @author imi
  */
 public class FilePreferences implements PreferenceSetting {
 
     private JCheckBox keepBackup = new JCheckBox(tr("Keep backup files"));
-    
+
     public void addGui(PreferenceDialog gui) {
         gui.connection.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
         keepBackup.setSelected(Main.pref.getBoolean("save.keepbackup"));

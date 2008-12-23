@@ -18,13 +18,13 @@ import org.openstreetmap.josm.data.osm.Way;
 /**
  * A visitor that get a data set at construction time and merge every visited object
  * into it.
- * 
+ *
  * @author imi
  */
 public class MergeVisitor implements Visitor {
 
     /**
-     * Map from primitives in the database to visited primitives. (Attention: The other way 
+     * Map from primitives in the database to visited primitives. (Attention: The other way
      * round than merged)
      */
     public Map<OsmPrimitive, OsmPrimitive> conflicts = new HashMap<OsmPrimitive, OsmPrimitive>();
@@ -210,7 +210,7 @@ public class MergeVisitor implements Visitor {
             my.keys = other.keys;
         else
             my.keys.putAll(other.keys);
-        
+
         my.modified = true;
     }
 

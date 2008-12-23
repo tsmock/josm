@@ -105,7 +105,7 @@ public class XmlObjectParser implements Iterable<Object> {
                 return Double.parseDouble(value);
             return value;
         }
-        
+
         private void setValue(String fieldName, String value) throws SAXException {
             if (fieldName.equals("class") || fieldName.equals("default") || fieldName.equals("throw") || fieldName.equals("new") || fieldName.equals("null"))
                 fieldName += "_";
@@ -151,9 +151,9 @@ public class XmlObjectParser implements Iterable<Object> {
             }
         }
         private boolean parseBoolean(String s) {
-            return s != null && 
-                !s.equals("0") && 
-                !s.startsWith("off") && 
+            return s != null &&
+                !s.equals("0") &&
+                !s.startsWith("off") &&
                 !s.startsWith("false") &&
                 !s.startsWith("no");
         }
@@ -173,7 +173,7 @@ public class XmlObjectParser implements Iterable<Object> {
 
     private Map<String, Entry> mapping = new HashMap<String, Entry>();
     private Parser parser;
-    
+
     /**
      * The queue of already parsed items from the parsing thread.
      */
@@ -184,7 +184,7 @@ public class XmlObjectParser implements Iterable<Object> {
      * So this is also the object that will be returned on the next call to next().
      */
     private Object lookAhead = null;
-    
+
     /**
      * This object represent the end of the stream (null is not allowed as
      * member in class Queue).

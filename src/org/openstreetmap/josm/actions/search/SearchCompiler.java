@@ -26,7 +26,7 @@ public class SearchCompiler {
         this.caseSensitive = caseSensitive;
         this.tokenizer = tokenizer;
     }
-    
+
     abstract public static class Match {
         abstract public boolean match(OsmPrimitive osm);
     }
@@ -167,7 +167,7 @@ public class SearchCompiler {
         }
         @Override public String toString() {return "modified";}
     }
-    
+
     private static class Selected extends Match {
         @Override public boolean match(OsmPrimitive osm) {
             return osm.selected;
@@ -187,7 +187,7 @@ public class SearchCompiler {
             super(msg);
         }
     }
-    
+
     public static Match compile(String searchStr, boolean caseSensitive)
             throws ParseError {
         return new SearchCompiler(caseSensitive,

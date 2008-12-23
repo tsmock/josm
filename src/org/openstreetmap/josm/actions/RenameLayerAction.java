@@ -20,7 +20,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * Action to rename an specific layer. Provides the option to rename the
  * file, this layer was loaded from as well (if it was loaded from a file).
- * 
+ *
  * @author Imi
  */
 public class RenameLayerAction extends AbstractAction {
@@ -30,7 +30,7 @@ public class RenameLayerAction extends AbstractAction {
 
     /**
      * @param file The file of the original location of this layer.
-     * 		If null, no possibility to "rename the file as well" is provided. 
+     *      If null, no possibility to "rename the file as well" is provided.
      */
     public RenameLayerAction(File file, Layer layer) {
         super(tr("Rename layer"), ImageProvider.get("dialogs", "edit"));

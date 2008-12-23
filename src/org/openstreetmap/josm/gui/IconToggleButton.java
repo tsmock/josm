@@ -31,7 +31,7 @@ public class IconToggleButton extends JToggleButton implements PropertyChangeLis
             setToolTipText(o.toString());
 
         action.addPropertyChangeListener(this);
-        
+
         addMouseListener(new MouseAdapter(){
             @Override public void mousePressed(MouseEvent e) {
                 groupbutton = e.getX() > getWidth()/2 && e.getY() > getHeight()/2;

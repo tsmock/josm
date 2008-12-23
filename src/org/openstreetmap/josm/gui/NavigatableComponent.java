@@ -78,7 +78,7 @@ public class NavigatableComponent extends JComponent implements Helpful {
 
     /**
      * @return Returns the center point. A copy is returned, so users cannot
-     * 		change the center by accessing the return value. Use zoomTo instead.
+     *      change the center by accessing the return value. Use zoomTo instead.
      */
     public EastNorth getCenter() {
         return center;
@@ -89,7 +89,7 @@ public class NavigatableComponent extends JComponent implements Helpful {
      * @param y Y-Pixelposition to get coordinate from
      *
      * @return Geographic coordinates from a specific pixel coordination
-     * 		on the screen.
+     *      on the screen.
      */
     public EastNorth getEastNorth(int x, int y) {
         return new EastNorth(
@@ -102,7 +102,7 @@ public class NavigatableComponent extends JComponent implements Helpful {
      * @param y Y-Pixelposition to get coordinate from
      *
      * @return Geographic unprojected coordinates from a specific pixel coordination
-     * 		on the screen.
+     *      on the screen.
      */
     public LatLon getLatLon(int x, int y) {
 
@@ -113,7 +113,7 @@ public class NavigatableComponent extends JComponent implements Helpful {
      * Return the point on the screen where this Coordinate would be.
      * @param p The point, where this geopoint would be drawn.
      * @return The point on screen where "point" would be drawn, relative
-     * 		to the own top/left.
+     *      to the own top/left.
      */
     public Point getPoint(EastNorth p) {
         if(null == p)
@@ -163,7 +163,7 @@ public class NavigatableComponent extends JComponent implements Helpful {
     /**
      * @return all way segments within 10px of p, sorted by their
      * perpendicular distance.
-     * 
+     *
      * @param p the point for which to search the nearest segment.
      */
     public final List<WaySegment> getNearestWaySegments(Point p) {
@@ -210,9 +210,9 @@ public class NavigatableComponent extends JComponent implements Helpful {
     }
 
     /**
-     * @return the nearest way segment to the screen point given that is not 
+     * @return the nearest way segment to the screen point given that is not
      * in ignore.
-     * 
+     *
      * @param p the point for which to search the nearest segment.
      * @param ignore a collection of segments which are not to be returned.
      * May be null.
@@ -229,7 +229,7 @@ public class NavigatableComponent extends JComponent implements Helpful {
     public final WaySegment getNearestWaySegment(Point p) {
         return getNearestWaySegment(p, null);
     }
-    
+
     /**
      * @return the nearest way to the screen point given.
      */
@@ -265,7 +265,7 @@ public class NavigatableComponent extends JComponent implements Helpful {
      */
     public Collection<OsmPrimitive> getNearestCollection(Point p) {
         OsmPrimitive osm = getNearest(p);
-        if (osm == null) 
+        if (osm == null)
             return Collections.emptySet();
         return Collections.singleton(osm);
     }
@@ -275,8 +275,8 @@ public class NavigatableComponent extends JComponent implements Helpful {
      * the mouse.  Does a simple sequential scan on all the data.
      *
      * @return A collection of all items or <code>null</code>
-     * 		if no item under or near the point. The returned
-     * 		list is never empty.
+     *      if no item under or near the point. The returned
+     *      list is never empty.
      */
     public Collection<OsmPrimitive> getAllNearest(Point p) {
         Collection<OsmPrimitive> nearest = new HashSet<OsmPrimitive>();
@@ -316,8 +316,8 @@ public class NavigatableComponent extends JComponent implements Helpful {
      * the mouse.  Does a simple sequential scan on all the data.
      *
      * @return A collection of all nodes or <code>null</code>
-     * 		if no node under or near the point. The returned
-     * 		list is never empty.
+     *      if no node under or near the point. The returned
+     *      list is never empty.
      */
     public Collection<Node> getNearestNodes(Point p) {
         Collection<Node> nearest = new HashSet<Node>();
@@ -331,9 +331,9 @@ public class NavigatableComponent extends JComponent implements Helpful {
     }
 
     /**
-     * @return the nearest nodes to the screen point given that is not 
+     * @return the nearest nodes to the screen point given that is not
      * in ignore.
-     * 
+     *
      * @param p the point for which to search the nearest segment.
      * @param ignore a collection of nodes which are not to be returned.
      * May be null.

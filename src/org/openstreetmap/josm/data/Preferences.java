@@ -34,14 +34,14 @@ import org.openstreetmap.josm.tools.ColorHelper;
  * @author imi
  */
 public class Preferences {
-    
+
     /**
-    * Internal storage for the preferenced directory. 
+    * Internal storage for the preferenced directory.
     * Do not access this variable directly!
     * @see #getPreferencesDirFile()
     */
     private File preferencesDirFile = null;
-     
+
     public static interface PreferenceChangedListener {
         void preferenceChanged(String key, String newValue);
     }
@@ -109,7 +109,7 @@ public class Preferences {
         }
         return preferencesDirFile;
     }
-    
+
     public File getPluginsDirFile() {
         return new File(getPreferencesDirFile(), "plugins");
     }

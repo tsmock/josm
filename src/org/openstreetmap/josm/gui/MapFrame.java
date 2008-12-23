@@ -34,7 +34,7 @@ import org.openstreetmap.josm.tools.Destroyable;
 /**
  * One Map frame with one dataset behind. This is the container gui class whose
  * display can be set to the different views.
- * 
+ *
  * @author imi
  */
 public class MapFrame extends JPanel implements Destroyable {
@@ -118,7 +118,7 @@ public class MapFrame extends JPanel implements Destroyable {
         for (int i = 0; i < toolBarToggle.getComponentCount(); ++i)
             if (toolBarToggle.getComponent(i) instanceof Destroyable)
                 ((Destroyable)toolBarToggle).destroy();
-        
+
         // remove menu entries
         Main.main.menu.viewMenu.setVisible(false);
     }
@@ -172,7 +172,7 @@ public class MapFrame extends JPanel implements Destroyable {
     /**
      * Change the operating map mode for the view. Will call unregister on the
      * old MapMode and register on the new one.
-     * @param mapMode	The new mode to set.
+     * @param mapMode   The new mode to set.
      */
     public void selectMapMode(MapMode mapMode) {
         if (mapMode == this.mapMode)
@@ -186,7 +186,7 @@ public class MapFrame extends JPanel implements Destroyable {
     /**
      * Fill the given panel by adding all necessary components to the different
      * locations.
-     * 
+     *
      * @param panel The container to fill. Must have an BorderLayout.
      */
     public void fillPanel(Container panel) {

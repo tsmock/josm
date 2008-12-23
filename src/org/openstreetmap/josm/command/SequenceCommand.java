@@ -43,7 +43,7 @@ public class SequenceCommand extends Command {
     public SequenceCommand(String name, Command... sequenz) {
         this(name, Arrays.asList(sequenz));
     }
-    
+
     public int executed_commands = 0;
     @Override public boolean executeCommand() {
         for (int i=0; i < sequence.length; i++) {

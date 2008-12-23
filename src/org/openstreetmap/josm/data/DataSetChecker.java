@@ -29,7 +29,7 @@ public class DataSetChecker {
                 }
             }
         }
-        
+
         if (Main.map.mapView.getActiveLayer() instanceof OsmDataLayer) {
             OsmDataLayer l = (OsmDataLayer)Main.map.mapView.getActiveLayer();
             if (l.data != Main.ds) {

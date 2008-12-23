@@ -46,14 +46,14 @@ public class OsmWriter extends XmlWriter implements Visitor {
             out.println("</osm>");
         }
     }
-    
+
     // simple helper to write the object's class to the out stream
     private Visitor typeWriteVisitor = new Visitor() {
         public void visit(Node n) { out.print("node"); }
         public void visit(Way w) { out.print("way"); }
         public void visit(Relation e) { out.print("relation"); }
     };
-    
+
     /**
      * An output writer for function output that writes everything of the given dataset into
      * the xml
@@ -65,8 +65,8 @@ public class OsmWriter extends XmlWriter implements Visitor {
         /**
          * Construct an writer function
          * @param osmConform <code>true</code>, if the xml should be 100% osm conform. In this
-         * 		case, not all information can be retrieved later (as example, modified state
-         * 		is lost and id's remain 0 instead of decrementing from -1)
+         *      case, not all information can be retrieved later (as example, modified state
+         *      is lost and id's remain 0 instead of decrementing from -1)
          */
         public All(DataSet ds, boolean osmConform) {
             this.ds = ds;
@@ -100,7 +100,7 @@ public class OsmWriter extends XmlWriter implements Visitor {
                         s.bounds.max.lat()+","+
                         s.bounds.max.lon()+"' ");
                 out.println("origin='"+XmlWriter.encode(s.origin)+"' />");
-                out.print("  <bounds minlat='" + 
+                out.print("  <bounds minlat='" +
                         s.bounds.min.lat()+"' minlon='"+
                         s.bounds.min.lon()+"' maxlat='"+
                         s.bounds.max.lat()+"' maxlon='"+
@@ -159,12 +159,12 @@ public class OsmWriter extends XmlWriter implements Visitor {
         for (RelationMember em : e.members) {
             out.print("    <member type='");
             em.member.visit(typeWriteVisitor);
-            out.println("' ref='"+getUsedId(em.member)+"' role='" + 
+            out.println("' ref='"+getUsedId(em.member)+"' role='" +
                 XmlWriter.encode(em.role) + "' />");
         }
         addTags(e, "relation", false);
     }
-    
+
 
     /**
      * Return the id for the given osm primitive (may access the usedId map)

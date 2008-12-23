@@ -36,11 +36,11 @@ public class TaggingPresetPreference implements PreferenceSetting {
     public static Collection<TaggingPreset> taggingPresets;
     private JList taggingPresetSources;
     private JCheckBox enableDefault;
-    
+
     public void addGui(final PreferenceDialog gui) {
-        
+
         taggingPresetSources = new JList(new DefaultListModel());
-        enableDefault = new JCheckBox(tr("Enable built-in defaults"), 
+        enableDefault = new JCheckBox(tr("Enable built-in defaults"),
                 Main.pref.getBoolean("taggingpreset.enable-defaults", true));
 
         String annos = Main.pref.get("taggingpreset.sources");
@@ -117,7 +117,7 @@ public class TaggingPresetPreference implements PreferenceSetting {
             Main.pref.put("taggingpreset.sources", null);
     }
 
-    /** 
+    /**
      * Initialize the tagging presets (load and may display error)
      */
     public static void initialize() {

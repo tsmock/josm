@@ -21,7 +21,7 @@ public class ShortcutPreference implements PreferenceSetting {
         // icon original filename: keyboard.png
         // icon original size: 128x128
         // modifications: icon was cropped, then resized
-        JPanel p = gui.createPreferenceTab("shortcuts", tr("Shortcut Preferences"), 
+        JPanel p = gui.createPreferenceTab("shortcuts", tr("Shortcut Preferences"),
                 tr("Changing keyboard shortcuts manually."), false);
 
         prefJPanel prefpanel = new prefJPanel(new scListModel());
@@ -34,7 +34,7 @@ public class ShortcutPreference implements PreferenceSetting {
 
     // Maybe move this to prefPanel? There's no need for it to be here.
     private class scListModel extends AbstractTableModel {
-//		private String[] columnNames = new String[]{tr("Action"), tr("Shortcut"), tr("Group"), tr("ID")};
+//      private String[] columnNames = new String[]{tr("Action"), tr("Shortcut"), tr("Group"), tr("ID")};
         private String[] columnNames = new String[]{tr("Action"), tr("Shortcut")};
         private Collection<Shortcut> data;
         public scListModel() {
