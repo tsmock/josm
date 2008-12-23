@@ -18,12 +18,12 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  * @author imi
  */
 public final class Node extends OsmPrimitive {
-    
+
     public LatLon coor;
     public volatile EastNorth eastNorth;
-    
+
     private static CoordinateFormat mCord;
-    
+
     static {
         try {
             mCord = LatLon.CoordinateFormat.valueOf(Main.pref.get("coordinates"));
@@ -39,7 +39,7 @@ public final class Node extends OsmPrimitive {
         this.id = id;
         incomplete = true;
     }
-    
+
     /**
      * Create an identical clone of the argument (including the id)
      */
@@ -55,7 +55,7 @@ public final class Node extends OsmPrimitive {
     @Override public void visit(Visitor visitor) {
         visitor.visit(this);
     }
-    
+
     @Override public void cloneFrom(OsmPrimitive osm) {
         super.cloneFrom(osm);
         coor = ((Node)osm).coor;

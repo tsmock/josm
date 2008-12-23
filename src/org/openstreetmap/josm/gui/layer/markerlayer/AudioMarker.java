@@ -10,16 +10,16 @@ import org.openstreetmap.josm.tools.AudioPlayer;
 
 /**
  * Marker class with audio playback capability.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  *
  */
 public class AudioMarker extends ButtonMarker {
 
-    private URL audioUrl;	
+    private URL audioUrl;
     private static AudioMarker recentlyPlayedMarker = null;
     public  double syncOffset;
-    
+
     /**
      * Verifies the parameter whether a new AudioMarker can be created and return
      * one or return <code>null</code>.
@@ -45,13 +45,13 @@ public class AudioMarker extends ButtonMarker {
     public static AudioMarker recentlyPlayedMarker() {
         return recentlyPlayedMarker;
     }
-    
+
     public URL url() {
         return audioUrl;
     }
-        
+
     /**
-     * Starts playing the audio associated with the marker offset by the given amount 
+     * Starts playing the audio associated with the marker offset by the given amount
      * @param after : seconds after marker where playing should start
      */
     public void play(double after) {
@@ -68,7 +68,7 @@ public class AudioMarker extends ButtonMarker {
 
     /**
      * Starts playing the audio associated with the marker: used in response to pressing
-     * the marker as well as indirectly 
+     * the marker as well as indirectly
      *
      */
     public void play() { play(0.0); }
@@ -80,7 +80,7 @@ public class AudioMarker extends ButtonMarker {
     public double syncOffset() {
         return syncOffset;
     }
-    
+
     public static String inventName (double offset) {
         int wholeSeconds = (int)(offset + 0.5);
         if (wholeSeconds < 60)

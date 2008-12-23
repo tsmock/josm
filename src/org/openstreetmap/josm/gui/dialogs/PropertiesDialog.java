@@ -383,7 +383,7 @@ public class PropertiesDialog extends ToggleDialog implements SelectionChangedLi
 
     /**
      * Delete the keys from the given row.
-     * @param row	The row, which key gets deleted from the dataset.
+     * @param row   The row, which key gets deleted from the dataset.
      */
     private void delete(int row) {
         String key = propertyData.getValueAt(row, 0).toString();

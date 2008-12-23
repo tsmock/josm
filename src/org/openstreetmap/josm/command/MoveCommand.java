@@ -25,7 +25,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * MoveCommand moves a set of OsmPrimitives along the map. It can be moved again
  * to collect several MoveCommands into one command.
- * 
+ *
  * @author imi
  */
 public class MoveCommand extends Command {
@@ -34,30 +34,30 @@ public class MoveCommand extends Command {
      */
     public Collection<Node> objects = new LinkedList<Node>();
     /**
-     * x difference movement. Coordinates are in northern/eastern 
+     * x difference movement. Coordinates are in northern/eastern
      */
     private double x;
     /**
-     * y difference movement. Coordinates are in northern/eastern 
+     * y difference movement. Coordinates are in northern/eastern
      */
     private double y;
 
     /**
      * Small helper for holding the interesting part of the old data state of the
-     * objects. 
+     * objects.
      */
     public static class OldState {
         LatLon latlon;
         EastNorth eastNorth;
         boolean modified;
     }
-    
+
     /**
      * List of all old states of the objects.
      */
     private List<OldState> oldState = new LinkedList<OldState>();
 
-    
+
     public MoveCommand(OsmPrimitive osm, double x, double y) {
         this(Collections.singleton(osm), x, y);
     }
@@ -81,7 +81,7 @@ public class MoveCommand extends Command {
      * Move the same set of objects again by the specified vector. The vectors
      * are added together and so the resulting will be moved to the previous
      * vector plus this one.
-     * 
+     *
      * The move is immediately executed and any undo will undo both vectors to
      * the original position the objects had before first moving.
      */
@@ -93,7 +93,7 @@ public class MoveCommand extends Command {
         this.x += x;
         this.y += y;
     }
-    
+
     @Override public boolean executeCommand() {
         for (Node n : objects) {
             n.eastNorth = new EastNorth(n.eastNorth.east()+x, n.eastNorth.north()+y);

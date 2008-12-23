@@ -1,6 +1,6 @@
 //License: GPL. Copyright 2007 by Immanuel Scholz and others
 /**
- * 
+ *
  */
 package org.openstreetmap.josm.plugins;
 
@@ -171,10 +171,10 @@ public class PluginDownloader {
     public static void update(Collection<PluginDescription> update) {
         Main.worker.execute(new UpdateTask(update));
     }
-    
+
     public static boolean moveUpdatedPlugins() {
         File pluginDir = Main.pref.getPluginsDirFile();
-        boolean ok = true; 		
+        boolean ok = true;
         if (pluginDir.exists() && pluginDir.isDirectory() && pluginDir.canWrite()) {
             final File[] files = pluginDir.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {

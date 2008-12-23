@@ -11,7 +11,7 @@ import javax.swing.Box;
 /**
  * A wrapper for GridBagConstraints which has sane default static creators and
  * member functions to chain calling.
- * 
+ *
  * @author imi
  */
 public class GBC extends GridBagConstraints {
@@ -84,10 +84,10 @@ public class GBC extends GridBagConstraints {
 
     /**
      * Adds insets to this GBC.
-     * @param left		The left space of the insets
-     * @param top		The top space of the insets
-     * @param right		The right space of the insets
-     * @param bottom	The bottom space of the insets
+     * @param left      The left space of the insets
+     * @param top       The top space of the insets
+     * @param right     The right space of the insets
+     * @param bottom    The bottom space of the insets
      * @return This constraint for chaining.
      */
     public GBC insets(int left, int top, int right, int bottom) {
@@ -98,9 +98,9 @@ public class GBC extends GridBagConstraints {
     /**
      * This is a helper to easily create a glue with a minimum default value.
      * @param x If higher than 0, this will be a horizontal glue with x as minimum
-     * 		horizontal strut.
+     *      horizontal strut.
      * @param y If higher than 0, this will be a vertical glue with y as minimum
-     * 		vertical strut.
+     *      vertical strut.
      */
     public static Component glue(int x, int y) {
         short maxx = x > 0 ? Short.MAX_VALUE : 0;

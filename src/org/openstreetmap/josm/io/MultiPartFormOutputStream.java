@@ -2,35 +2,35 @@
 Taken from forum.java.sun.com
 
 License
-                
+
 Copyright 1994-2007 Sun Microsystems, Inc. All Rights Reserved.
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
- 
-    * Redistribution of source code must retain the above copyright notice, this list 
+
+    * Redistribution of source code must retain the above copyright notice, this list
       of conditions and the following disclaimer.
 
-    * Redistribution in binary form must reproduce the above copyright notice, this 
-      list of conditions and the following disclaimer in the documentation and/or other 
+    * Redistribution in binary form must reproduce the above copyright notice, this
+      list of conditions and the following disclaimer in the documentation and/or other
       materials provided with the distribution.
 
- 
-Neither the name of Sun Microsystems, Inc. or the names of contributors may be used to 
-endorse or promote products derived from this software without specific prior written 
+
+Neither the name of Sun Microsystems, Inc. or the names of contributors may be used to
+endorse or promote products derived from this software without specific prior written
 permission.
- 
-This software is provided "AS IS," without a warranty of any kind. ALL EXPRESS OR IMPLIED 
-CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED. SUN MICROSYSTEMS, 
-INC. ("SUN") AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS 
-A RESULT OF USING, MODIFYING OR DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES. IN NO EVENT 
-WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR DIRECT, 
-INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND 
-REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THIS 
+
+This software is provided "AS IS," without a warranty of any kind. ALL EXPRESS OR IMPLIED
+CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED. SUN MICROSYSTEMS,
+INC. ("SUN") AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
+A RESULT OF USING, MODIFYING OR DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES. IN NO EVENT
+WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR DIRECT,
+INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND
+REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THIS
 SOFTWARE, EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- 
-You acknowledge that this software is not designed, licensed or intended for use in the 
-design, construction, operation or maintenance of any nuclear facility. 
+
+You acknowledge that this software is not designed, licensed or intended for use in the
+design, construction, operation or maintenance of any nuclear facility.
 */
 
 package org.openstreetmap.josm.io;
@@ -43,44 +43,44 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-     
+
 /**
- * <code>MultiPartFormOutputStream</code> is used to write 
- * "multipart/form-data" to a <code>java.net.URLConnection</code> for 
- * POSTing.  This is primarily for file uploading to HTTP servers.  
- * 
+ * <code>MultiPartFormOutputStream</code> is used to write
+ * "multipart/form-data" to a <code>java.net.URLConnection</code> for
+ * POSTing.  This is primarily for file uploading to HTTP servers.
+ *
  * @since  JDK1.3
  */
 public class MultiPartFormOutputStream extends OsmConnection {
     /**
-     * The line end characters.  
+     * The line end characters.
      */
     private static final String NEWLINE = "\r\n";
 
     /**
-     * The boundary prefix.  
+     * The boundary prefix.
      */
     private static final String PREFIX = "--";
 
     /**
-     * The output stream to write to.  
+     * The output stream to write to.
      */
     private DataOutputStream out = null;
 
     /**
-     * The multipart boundary string.  
+     * The multipart boundary string.
      */
     private String boundary = null;
 
     /**
-     * Creates a new <code>MultiPartFormOutputStream</code> object using 
-     * the specified output stream and boundary.  The boundary is required 
-     * to be created before using this method, as described in the 
-     * description for the <code>getContentType(String)</code> method.  
-     * The boundary is only checked for <code>null</code> or empty string, 
-     * but it is recommended to be at least 6 characters.  (Or use the 
+     * Creates a new <code>MultiPartFormOutputStream</code> object using
+     * the specified output stream and boundary.  The boundary is required
+     * to be created before using this method, as described in the
+     * description for the <code>getContentType(String)</code> method.
+     * The boundary is only checked for <code>null</code> or empty string,
+     * but it is recommended to be at least 6 characters.  (Or use the
      * static createBoundary() method to create one.)
-     * 
+     *
      * @param  os        the output stream
      * @param  boundary  the boundary
      * @see  #createBoundary()
@@ -99,98 +99,98 @@ public class MultiPartFormOutputStream extends OsmConnection {
     }
 
     /**
-     * Writes an boolean field value.  
-     * 
+     * Writes an boolean field value.
+     *
      * @param  name   the field name (required)
      * @param  value  the field value
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeField(String name, boolean value) 
+    public void writeField(String name, boolean value)
     throws java.io.IOException {
         writeField(name, new Boolean(value).toString());
     }
 
     /**
-     * Writes an double field value.  
-     * 
+     * Writes an double field value.
+     *
      * @param  name   the field name (required)
      * @param  value  the field value
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeField(String name, double value) 
+    public void writeField(String name, double value)
     throws java.io.IOException {
         writeField(name, Double.toString(value));
     }
 
     /**
-     * Writes an float field value.  
-     * 
+     * Writes an float field value.
+     *
      * @param  name   the field name (required)
      * @param  value  the field value
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeField(String name, float value) 
+    public void writeField(String name, float value)
     throws java.io.IOException {
         writeField(name, Float.toString(value));
     }
 
     /**
-     * Writes an long field value.  
-     * 
+     * Writes an long field value.
+     *
      * @param  name   the field name (required)
      * @param  value  the field value
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeField(String name, long value) 
+    public void writeField(String name, long value)
     throws java.io.IOException {
         writeField(name, Long.toString(value));
     }
 
     /**
-     * Writes an int field value.  
-     * 
+     * Writes an int field value.
+     *
      * @param  name   the field name (required)
      * @param  value  the field value
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeField(String name, int value) 
+    public void writeField(String name, int value)
     throws java.io.IOException {
         writeField(name, Integer.toString(value));
     }
 
     /**
-     * Writes an short field value.  
-     * 
+     * Writes an short field value.
+     *
      * @param  name   the field name (required)
      * @param  value  the field value
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeField(String name, short value) 
+    public void writeField(String name, short value)
     throws java.io.IOException {
         writeField(name, Short.toString(value));
     }
 
     /**
-     * Writes an char field value.  
-     * 
+     * Writes an char field value.
+     *
      * @param  name   the field name (required)
      * @param  value  the field value
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeField(String name, char value) 
+    public void writeField(String name, char value)
     throws java.io.IOException {
         writeField(name, new Character(value).toString());
     }
 
     /**
-     * Writes an string field value.  If the value is null, an empty string 
-     * is sent ("").  
-     * 
+     * Writes an string field value.  If the value is null, an empty string
+     * is sent ("").
+     *
      * @param  name   the field name (required)
      * @param  value  the field value
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeField(String name, String value) 
+    public void writeField(String name, String value)
     throws java.io.IOException {
         if(name == null) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
@@ -219,16 +219,16 @@ public class MultiPartFormOutputStream extends OsmConnection {
     }
 
     /**
-     * Writes a file's contents.  If the file is null, does not exists, or 
-     * is a directory, a <code>java.lang.IllegalArgumentException</code> 
-     * will be thrown.  
-     * 
+     * Writes a file's contents.  If the file is null, does not exists, or
+     * is a directory, a <code>java.lang.IllegalArgumentException</code>
+     * will be thrown.
+     *
      * @param  name      the field name
      * @param  mimeType  the file content type (optional, recommended)
      * @param  file      the file (the file must exist)
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeFile(String name, String mimeType, java.io.File file) 
+    public void writeFile(String name, String mimeType, java.io.File file)
     throws java.io.IOException {
         if(file == null) {
             throw new IllegalArgumentException("File cannot be null.");
@@ -243,17 +243,17 @@ public class MultiPartFormOutputStream extends OsmConnection {
     }
 
     /**
-     * Writes a input stream's contents.  If the input stream is null, a 
-     * <code>java.lang.IllegalArgumentException</code> will be thrown.  
-     * 
+     * Writes a input stream's contents.  If the input stream is null, a
+     * <code>java.lang.IllegalArgumentException</code> will be thrown.
+     *
      * @param  name      the field name
      * @param  mimeType  the file content type (optional, recommended)
      * @param  fileName  the file name (required)
      * @param  is        the input stream
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeFile(String name, String mimeType, 
-            String fileName, InputStream is) 
+    public void writeFile(String name, String mimeType,
+            String fileName, InputStream is)
     throws java.io.IOException {
         if(is == null) {
             throw new IllegalArgumentException("Input stream cannot be null.");
@@ -273,7 +273,7 @@ public class MultiPartFormOutputStream extends OsmConnection {
         out.writeBytes(boundary);
         out.writeBytes(NEWLINE);
         // write content header
-        out.writeBytes("Content-Disposition: form-data; name=\"" + name + 
+        out.writeBytes("Content-Disposition: form-data; name=\"" + name +
                 "\"; filename=\"" + fileName + "\"");
         out.writeBytes(NEWLINE);
         if(mimeType != null) {
@@ -296,18 +296,18 @@ public class MultiPartFormOutputStream extends OsmConnection {
     }
 
     /**
-     * Writes the given bytes.  The bytes are assumed to be the contents 
-     * of a file, and will be sent as such.  If the data is null, a 
-     * <code>java.lang.IllegalArgumentException</code> will be thrown.  
-     * 
+     * Writes the given bytes.  The bytes are assumed to be the contents
+     * of a file, and will be sent as such.  If the data is null, a
+     * <code>java.lang.IllegalArgumentException</code> will be thrown.
+     *
      * @param  name      the field name
      * @param  mimeType  the file content type (optional, recommended)
      * @param  fileName  the file name (required)
      * @param  data      the file data
      * @throws  java.io.IOException  on input/output errors
      */
-    public void writeFile(String name, String mimeType, 
-            String fileName, byte[] data) 
+    public void writeFile(String name, String mimeType,
+            String fileName, byte[] data)
     throws java.io.IOException {
         if(data == null) {
             throw new IllegalArgumentException("Data cannot be null.");
@@ -327,7 +327,7 @@ public class MultiPartFormOutputStream extends OsmConnection {
         out.writeBytes(boundary);
         out.writeBytes(NEWLINE);
         // write content header
-        out.writeBytes("Content-Disposition: form-data; name=\"" + name + 
+        out.writeBytes("Content-Disposition: form-data; name=\"" + name +
                 "\"; filename=\"" + fileName + "\"");
         out.writeBytes(NEWLINE);
         if(mimeType != null) {
@@ -342,8 +342,8 @@ public class MultiPartFormOutputStream extends OsmConnection {
     }
 
     /**
-     * Flushes the stream.  Actually, this method does nothing, as the only 
-     * write methods are highly specialized and automatically flush.  
+     * Flushes the stream.  Actually, this method does nothing, as the only
+     * write methods are highly specialized and automatically flush.
      */
     public void flush() {
         // out.flush();
@@ -352,9 +352,9 @@ public class MultiPartFormOutputStream extends OsmConnection {
     /**
      * Closes the stream.  <br/>
      * <br/>
-     * <b>NOTE:</b> This method <b>MUST</b> be called to finalize the 
+     * <b>NOTE:</b> This method <b>MUST</b> be called to finalize the
      * multipart stream.
-     * 
+     *
      * @throws  java.io.IOException  on input/output errors
      */
     public void close() throws java.io.IOException {
@@ -368,8 +368,8 @@ public class MultiPartFormOutputStream extends OsmConnection {
     }
 
     /**
-     * Gets the multipart boundary string being used by this stream.  
-     * 
+     * Gets the multipart boundary string being used by this stream.
+     *
      * @return  the boundary
      */
     public String getBoundary() {
@@ -377,16 +377,16 @@ public class MultiPartFormOutputStream extends OsmConnection {
     }
 
     /**
-     * Creates a new <code>java.net.URLConnection</code> object from the 
-     * specified <code>java.net.URL</code>.  This is a convenience method 
-     * which will set the <code>doInput</code>, <code>doOutput</code>, 
-     * <code>useCaches</code> and <code>defaultUseCaches</code> fields to 
-     * the appropriate settings in the correct order.  
-     * 
+     * Creates a new <code>java.net.URLConnection</code> object from the
+     * specified <code>java.net.URL</code>.  This is a convenience method
+     * which will set the <code>doInput</code>, <code>doOutput</code>,
+     * <code>useCaches</code> and <code>defaultUseCaches</code> fields to
+     * the appropriate settings in the correct order.
+     *
      * @return  a <code>java.net.URLConnection</code> object for the URL
      * @throws  java.io.IOException  on input/output errors
      */
-    public static URLConnection createConnection(URL url) 
+    public static URLConnection createConnection(URL url)
     throws java.io.IOException {
         URLConnection urlConn = url.openConnection();
         if(urlConn instanceof HttpURLConnection) {
@@ -401,30 +401,30 @@ public class MultiPartFormOutputStream extends OsmConnection {
     }
 
     /**
-     * Creates a multipart boundary string by concatenating 20 hyphens (-) 
-     * and the hexadecimal (base-16) representation of the current time in 
-     * milliseconds.  
-     * 
+     * Creates a multipart boundary string by concatenating 20 hyphens (-)
+     * and the hexadecimal (base-16) representation of the current time in
+     * milliseconds.
+     *
      * @return  a multipart boundary string
      * @see  #getContentType(String)
      */
     public static String createBoundary() {
-        return "--------------------" + 
+        return "--------------------" +
         Long.toString(System.currentTimeMillis(), 16);
     }
 
     /**
-     * Gets the content type string suitable for the 
-     * <code>java.net.URLConnection</code> which includes the multipart 
+     * Gets the content type string suitable for the
+     * <code>java.net.URLConnection</code> which includes the multipart
      * boundary string.  <br/>
      * <br/>
-     * This method is static because, due to the nature of the 
-     * <code>java.net.URLConnection</code> class, once the output stream 
-     * for the connection is acquired, it's too late to set the content 
-     * type (or any other request parameter).  So one has to create a 
-     * multipart boundary string first before using this class, such as 
-     * with the <code>createBoundary()</code> method.  
-     * 
+     * This method is static because, due to the nature of the
+     * <code>java.net.URLConnection</code> class, once the output stream
+     * for the connection is acquired, it's too late to set the content
+     * type (or any other request parameter).  So one has to create a
+     * multipart boundary string first before using this class, such as
+     * with the <code>createBoundary()</code> method.
+     *
      * @param  boundary  the boundary string
      * @return  the content type string
      * @see  #createBoundary()

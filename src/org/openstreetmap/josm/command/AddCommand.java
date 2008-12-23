@@ -21,9 +21,9 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 /**
  * A command that adds an osm primitive to a dataset. Keys cannot be added this
  * way.
- * 
+ *
  * See {@link ChangeCommand ChangeCommand} for comments on relation back references.
- * 
+ *
  * @author imi
  */
 public class AddCommand extends Command {
@@ -32,7 +32,7 @@ public class AddCommand extends Command {
      * The primitive to add to the dataset.
      */
     private final OsmPrimitive osm;
-    
+
     private DataSet ds;
 
     /**

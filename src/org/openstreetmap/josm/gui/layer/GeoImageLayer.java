@@ -285,10 +285,10 @@ public class GeoImageLayer extends Layer {
         });
 
         ActionListener nextprevAction = new ActionListener(){
-            public void actionPerformed(ActionEvent ev) {			    
+            public void actionPerformed(ActionEvent ev) {
                 p.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 if (ev.getActionCommand().equals("Next")) {
-                    currentImage++; 
+                    currentImage++;
                     if(currentImage>=data.size()-1) next.setEnabled(false);
                     prev.setEnabled(true);
                 } else {
@@ -328,18 +328,18 @@ public class GeoImageLayer extends Layer {
             public void componentHidden(ComponentEvent e) {}
             public void componentMoved(ComponentEvent e) {}
             public void componentResized(ComponentEvent ev) {
-                // we ignore the first resize event, as the picture is scaled already on load: 
+                // we ignore the first resize event, as the picture is scaled already on load:
                 if (scale.getModel().isSelected() && !ignoreEvent) {
                     ((JLabel)vp.getView()).setIcon(loadScaledImage(e.image, Math.max(vp.getWidth(), vp.getHeight())));
                 }
                 ignoreEvent = false;
             }
             public void componentShown(ComponentEvent e) {}
-            
+
         });
         dlg.setModal(false);
         dlg.setVisible(true);
-        dlg.setResizable(true); 
+        dlg.setResizable(true);
     }
 
     @Override public Icon getIcon() {
@@ -533,14 +533,14 @@ public class GeoImageLayer extends Layer {
         }
         return new ImageIcon(createResizedCopy(img, w, h));
     }
-    
-    private static BufferedImage createResizedCopy(Image originalImage, 
+
+    private static BufferedImage createResizedCopy(Image originalImage,
             int scaledWidth, int scaledHeight)
     {
         BufferedImage scaledBI = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = scaledBI.createGraphics();
 
-        g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null); 
+        g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
         g.dispose();
         return scaledBI;
     }

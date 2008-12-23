@@ -13,9 +13,9 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Helper that collect all ways a node is part of.
- * 
+ *
  * Deleted objects are not collected.
- * 
+ *
  * @author imi
  */
 public class CollectBackReferencesVisitor implements Visitor {
@@ -57,17 +57,17 @@ public class CollectBackReferencesVisitor implements Visitor {
         }
         checkRelationMembership(n);
     }
-    
+
     public void visit(Way w) {
         checkRelationMembership(w);
     }
-    
+
     public void visit(Relation r) {
         checkRelationMembership(r);
     }
-    
+
     private void checkRelationMembership(OsmPrimitive p) {
-        // FIXME - this might be a candidate for optimisation 
+        // FIXME - this might be a candidate for optimisation
         // if OSM primitives are made to hold a list of back
         // references.
         for (Relation r : ds.relations) {

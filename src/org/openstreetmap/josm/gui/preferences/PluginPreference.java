@@ -52,7 +52,7 @@ public class PluginPreference implements PreferenceSetting {
      * Only the plugin name, its jar location and the description.
      * In other words, this is the minimal requirement the plugin preference page
      * needs to show the plugin as available
-     * 
+     *
      * @author imi
      */
     public static class PluginDescription implements Comparable<Object> {
@@ -242,7 +242,7 @@ public class PluginPreference implements PreferenceSetting {
         int width = pluginPanel.myGetWidth();
 
         Collection<String> enabledPlugins = Main.pref.getCollection("plugins", null);
-        
+
         for (final PluginDescription plugin : availablePlugins) {
             boolean enabled = enabledPlugins != null && enabledPlugins.contains(plugin.name);
             String remoteversion = plugin.version;
@@ -280,7 +280,7 @@ public class PluginPreference implements PreferenceSetting {
                         PluginInformation plinfo = PluginInformation.findPlugin(plugin.name);
                         if ((PluginInformation.getLoaded(plugin.name) == null) && (plinfo != null)) {
                             try {
-                                int answer = JOptionPane.showConfirmDialog(Main.parent, 
+                                int answer = JOptionPane.showConfirmDialog(Main.parent,
                                     tr("Plugin archive already available. Do you want to download current version by deleting existing archive?\n\n{0}",
                                     plinfo.file.getCanonicalPath()), tr("Plugin already exists"), JOptionPane.OK_CANCEL_OPTION);
                                 if (answer == JOptionPane.OK_OPTION) {
@@ -342,8 +342,8 @@ public class PluginPreference implements PreferenceSetting {
         for (PluginProxy proxy : Main.plugins)
             if (!availablePlugins.containsKey(proxy.info.name))
                 availablePlugins.put(proxy.info.name, new PluginDescription(
-                        proxy.info.name, 
-                        proxy.info.description, 
+                        proxy.info.name,
+                        proxy.info.description,
                         proxy.info.file == null ? null :
                             PluginInformation.fileToURL(proxy.info.file).toString(),
                         proxy.info.version));
@@ -360,8 +360,8 @@ public class PluginPreference implements PreferenceSetting {
             }
         }
         if (!toDownload.isEmpty()) {
-            int answer = JOptionPane.showConfirmDialog(Main.parent,	
-                    tr("Download the following plugins?\n\n{0}", msg), 
+            int answer = JOptionPane.showConfirmDialog(Main.parent,
+                    tr("Download the following plugins?\n\n{0}", msg),
                     tr("Download missing plugins"),
                     JOptionPane.YES_NO_OPTION);
             if (answer != JOptionPane.OK_OPTION)

@@ -56,7 +56,7 @@ import org.openstreetmap.josm.tools.UrlLabel;
 /**
  * A layer holding data from a gps source.
  * The data is read only.
- * 
+ *
  * @author imi
  */
 public class RawGpsLayer extends Layer implements PreferenceChangedListener {
@@ -85,7 +85,7 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
             Main.main.removeLayer(RawGpsLayer.this);
         }
     }
-    
+
     public class UploadTraceAction extends AbstractAction {
         public UploadTraceAction() {
             super(tr("Upload this trace..."), ImageProvider.get("uploadtrace"));
@@ -97,7 +97,7 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
             ButtonGroup bg = new ButtonGroup();
             JRadioButton c1 = null;
             JRadioButton c2 = null;
-            
+
             if (associatedFile != null) {
                 c1 = new JRadioButton(tr("Upload track filtered by JOSM"), false);
                 c2 = new JRadioButton(tr("Upload raw file: {0}", associatedFile.getName()), true);
@@ -115,7 +115,7 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
             msg.add(c1, GBC.eol());
             msg.add(c2, GBC.eop());
 
-            
+
             JTextField description = new JTextField();
             JTextField tags = new JTextField();
             msg.add(new JLabel(tr("Description:")), GBC.std());
@@ -125,7 +125,7 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
             JCheckBox c3 = new JCheckBox("public");
             msg.add(c3, GBC.eop());
             msg.add(new JLabel("Please ensure that you don't upload your traces twice."), GBC.eop());
-            
+
             int answer = JOptionPane.showConfirmDialog(Main.parent, msg, tr("GPX-Upload"), JOptionPane.OK_CANCEL_OPTION);
             if (answer == JOptionPane.OK_OPTION)
             {
@@ -138,13 +138,13 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
                     String boundary = MultiPartFormOutputStream.createBoundary();
                     URLConnection urlConn = MultiPartFormOutputStream.createConnection(url);
                     urlConn.setRequestProperty("Accept", "*/*");
-                    urlConn.setRequestProperty("Content-Type", 
+                    urlConn.setRequestProperty("Content-Type",
                         MultiPartFormOutputStream.getContentType(boundary));
                     // set some other request headers...
                     urlConn.setRequestProperty("Connection", "Keep-Alive");
                     urlConn.setRequestProperty("Cache-Control", "no-cache");
                     // no need to connect cuz getOutputStream() does it
-                    MultiPartFormOutputStream out = 
+                    MultiPartFormOutputStream out =
                         new MultiPartFormOutputStream(urlConn.getOutputStream(), boundary);
                     out.writeField("description", description.getText());
                     out.writeField("tags", tags.getText());
@@ -152,7 +152,7 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
                     // upload a file
                     out.writeFile("gpx_file", "text/xml", associatedFile);
                     // can also write bytes directly
-                    // out.writeFile("myFile", "text/plain", "C:\\test.txt", 
+                    // out.writeFile("myFile", "text/plain", "C:\\test.txt",
                     // "This is some file text.".getBytes("ASCII"));
                     out.close();
                     // read response from server
@@ -163,7 +163,7 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
                          System.out.println(line);
                     }
                     in.close();
-                    
+
                     /*
                     int retCode = activeConnection.getResponseCode();
                     System.out.println("got return: "+retCode);
@@ -184,11 +184,11 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
                     throw new RuntimeException(tr("Unknown host")+": "+ex.getMessage(), ex);
                 } catch (Exception ex) {
                     //if (cancel)
-                    //	return; // assume cancel
+                    //  return; // assume cancel
                     if (ex instanceof RuntimeException)
                         throw (RuntimeException)ex;
                     throw new RuntimeException(ex.getMessage(), ex);
-                }	
+                }
             }
         }
     }
@@ -198,8 +198,8 @@ public class RawGpsLayer extends Layer implements PreferenceChangedListener {
         public final EastNorth eastNorth;
         public final String time;
         public GpsPoint(LatLon ll, String t) {
-            latlon = ll; 
-            eastNorth = Main.proj.latlon2eastNorth(ll); 
+            latlon = ll;
+            eastNorth = Main.proj.latlon2eastNorth(ll);
             time = t;
         }
     }

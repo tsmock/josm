@@ -31,7 +31,7 @@ import org.openstreetmap.josm.tools.XmlObjectParser;
 /**
  * This class tweak the Preferences class to provide server side preference settings, as example
  * used in the applet version.
- * 
+ *
  * @author Imi
  */
 public class ServerSidePreferences extends Preferences {
@@ -137,7 +137,7 @@ public class ServerSidePreferences extends Preferences {
     /**
      * Use this instead of save() for the ServerSidePreferences, since uploads
      * are costly while save is called often.
-     * 
+     *
      * This is triggered by an explicit menu option.
      */
     public void upload() {

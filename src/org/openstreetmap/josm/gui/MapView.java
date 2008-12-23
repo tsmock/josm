@@ -241,8 +241,8 @@ public class MapView extends NavigatableComponent {
 
     /**
      * Moves the layer to the given new position. No event is fired.
-     * @param layer		The layer to move
-     * @param pos		The new position of the layer
+     * @param layer     The layer to move
+     * @param pos       The new position of the layer
      */
     public void moveLayer(Layer layer, int pos) {
         int curLayerPos = layers.indexOf(layer);

@@ -10,11 +10,11 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
 
 /**
  * An relation, having a set of tags and any number (0...n) of members.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  */
 public final class Relation extends OsmPrimitive {
-    
+
     /**
      * All members of this relation. Note that after changing this,
      * makeBackReferences and/or removeBackReferences should be called.
@@ -31,7 +31,7 @@ public final class Relation extends OsmPrimitive {
     public Relation(Relation clone) {
         cloneFrom(clone);
     }
-    
+
     /**
      * Create an incomplete Relation.
      */
@@ -39,14 +39,14 @@ public final class Relation extends OsmPrimitive {
         this.id = id;
         incomplete = true;
     }
-    
-    /** 
+
+    /**
      * Create an empty Relation. Use this only if you set meaningful values
      * afterwards.
      */
-    public Relation() {	
+    public Relation() {
     }
-    
+
     @Override public void cloneFrom(OsmPrimitive osm) {
         super.cloneFrom(osm);
         members.clear();
@@ -80,7 +80,7 @@ public final class Relation extends OsmPrimitive {
             // FIXME add names of members
             if (name == null)
                 name = tr("relation");
-            
+
             name += " (";
             String nameTag = get("name");
             if (nameTag == null) nameTag = get("ref");

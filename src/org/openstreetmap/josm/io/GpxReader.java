@@ -51,7 +51,7 @@ public class GpxReader {
         private WayPoint currentWayPoint;
 
         private state currentState = state.init;
-    
+
         private GpxLink currentLink;
         private Stack<state> states;
 
@@ -61,7 +61,7 @@ public class GpxReader {
             accumulator = new StringBuffer();
             states = new Stack<state>();
             currentData = new GpxData();
-        }		
+        }
 
         private double parseCoord(String s) {
             try {
@@ -229,10 +229,10 @@ public class GpxReader {
                     currentWayPoint.attr.put(qName, accumulator.toString());
                 } else if (qName.equals("time")) {
                     currentWayPoint.attr.put(qName, accumulator.toString());
-                    currentWayPoint.setTime();					
+                    currentWayPoint.setTime();
                 } else if (qName.equals("cmt") || qName.equals("desc")) {
                     currentWayPoint.attr.put(qName, accumulator.toString());
-                    currentWayPoint.setGarminCommentTime(qName);					
+                    currentWayPoint.setGarminCommentTime(qName);
                 } else if (qName.equals("rtept")) {
                     currentState = states.pop();
                     currentRoute.routePoints.add(currentWayPoint);
@@ -285,12 +285,12 @@ public class GpxReader {
 
     /**
      * Parse the input stream and store the result in trackData and markerData
-     * 
-     * @param relativeMarkerPath The directory to use as relative path for all &lt;wpt&gt; 
-     *    marker tags. Maybe <code>null</code>, in which case no relative urls are constructed for the markers. 
+     *
+     * @param relativeMarkerPath The directory to use as relative path for all &lt;wpt&gt;
+     *    marker tags. Maybe <code>null</code>, in which case no relative urls are constructed for the markers.
      */
     public GpxReader(InputStream source, File relativeMarkerPath) throws SAXException, IOException {
-        
+
         Parser parser = new Parser();
         InputSource inputSource = new InputSource(new InputStreamReader(source, "UTF-8"));
         try {
