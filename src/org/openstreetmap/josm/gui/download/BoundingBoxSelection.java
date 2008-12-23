@@ -25,9 +25,9 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.tools.GBC;
 /**
  * Bounding box selector.
- * 
+ *
  * Provides max/min lat/lon input fields as well as the "URL from www.openstreetmap.org" text field.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  *
  */
@@ -41,7 +41,7 @@ public class BoundingBoxSelection implements DownloadSelection {
     final JTextArea osmUrl = new JTextArea();
     final JTextArea showUrl = new JTextArea();
     String noteUrl = tr("You can paste an URL here to download the area.");
-    
+
     public void addGui(final DownloadDialog gui) {
 
         JPanel dlg = new JPanel(new GridBagLayout());
@@ -57,7 +57,7 @@ public class BoundingBoxSelection implements DownloadSelection {
                             double maxlat = Double.parseDouble(latlon[2].getText());
                             double maxlon = Double.parseDouble(latlon[3].getText());
                             if (minlat != gui.minlat || minlon != gui.minlon || maxlat != gui.maxlat || maxlon != gui.maxlon) {
-                                gui.minlat = minlat; gui.minlon = minlon; 
+                                gui.minlat = minlat; gui.minlon = minlon;
                                 gui.maxlat = maxlat; gui.maxlon = maxlon;
                                 gui.boundingBoxChanged(BoundingBoxSelection.this);
                             }
@@ -69,7 +69,7 @@ public class BoundingBoxSelection implements DownloadSelection {
                 });
             }
         };
-        
+
         for (JTextField f : latlon) {
             f.setMinimumSize(new Dimension(100,new JTextField().getMinimumSize().height));
             f.addFocusListener(dialogUpdater);
@@ -91,9 +91,9 @@ public class BoundingBoxSelection implements DownloadSelection {
                 }
             }
         }
-        
+
         osmUrl.getDocument().addDocumentListener(new osmUrlRefresher());
-        
+
         // select content on receiving focus. this seems to be the default in the
         // windows look+feel but not for others. needs invokeLater to avoid strange
         // side effects that will cancel out the newly made selection otherwise.
@@ -108,7 +108,7 @@ public class BoundingBoxSelection implements DownloadSelection {
         });
         osmUrl.setLineWrap(true);
         osmUrl.setBorder(latlon[0].getBorder());
-        
+
         dlg.add(new JLabel(tr("min lat")), GBC.std().insets(10,20,5,0));
         dlg.add(latlon[0], GBC.std().insets(0,20,0,0));
         dlg.add(new JLabel(tr("min lon")), GBC.std().insets(10,20,5,0));
@@ -117,7 +117,7 @@ public class BoundingBoxSelection implements DownloadSelection {
         dlg.add(latlon[2], GBC.std());
         dlg.add(new JLabel(tr("max lon")), GBC.std().insets(10,0,5,0));
         dlg.add(latlon[3], GBC.eol());
-        
+
         dlg.add(new JLabel(tr("URL from www.openstreetmap.org")), GBC.eol().insets(10,20,5,0));
         dlg.add(osmUrl, GBC.eop().insets(10,0,5,0).fill());
         dlg.add(showUrl, GBC.eop().insets(10,0,5,5));
@@ -127,12 +127,12 @@ public class BoundingBoxSelection implements DownloadSelection {
            @Override
             public void focusGained(FocusEvent e) {
                 showUrl.selectAll();
-            } 
+            }
         });
 
         gui.tabpane.addTab(tr("Bounding Box"), dlg);
     }
-    
+
     /**
      * Called when bounding box is changed by one of the other download dialog tabs.
      */
@@ -140,17 +140,17 @@ public class BoundingBoxSelection implements DownloadSelection {
         updateBboxFields(gui);
         updateUrl(gui);
     }
-    
+
     private void updateBboxFields(DownloadDialog gui) {
         latlon[0].setText(Double.toString(gui.minlat));
         latlon[1].setText(Double.toString(gui.minlon));
         latlon[2].setText(Double.toString(gui.maxlat));
         latlon[3].setText(Double.toString(gui.maxlon));
-        for (JTextField f : latlon) 
+        for (JTextField f : latlon)
             f.setCaretPosition(0);
     }
-    
-    private void updateUrl(DownloadDialog gui) {	
+
+    private void updateUrl(DownloadDialog gui) {
         double lat = (gui.minlat + gui.maxlat)/2;
         double lon = (gui.minlon + gui.maxlon)/2;
         // convert to mercator (for calculation of zoom only)
@@ -166,7 +166,7 @@ public class BoundingBoxSelection implements DownloadSelection {
         }
         showUrl.setText("http://www.openstreetmap.org/index.html?mlat="+lat+"&mlon="+lon+"&zoom="+zoom);
     }
-    
+
     public static Bounds osmurl2bounds(String url) {
         int i = url.indexOf('?');
         if (i == -1)
@@ -187,7 +187,7 @@ public class BoundingBoxSelection implements DownloadSelection {
                 b = new Bounds(
                     new LatLon(Double.parseDouble(bbox[1]), Double.parseDouble(bbox[0])),
                     new LatLon(Double.parseDouble(bbox[3]), Double.parseDouble(bbox[2])));
-            
+
             } else {
                 double size = 180.0 / Math.pow(2, Integer.parseInt(map.get("zoom")));
                 b = new Bounds(

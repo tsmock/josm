@@ -60,7 +60,7 @@ public class ProxyPreferences implements PreferenceSetting {
         proxyUser.setText(Main.pref.get(PROXY_USER));
         proxyPass.setEnabled(Main.pref.getBoolean(PROXY_ENABLE) && (Main.pref.getBoolean(PROXY_ANONYMOUS)));
         proxyPass.setText(Main.pref.get(PROXY_USER));
-        
+
         gui.connection.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
         gui.connection.add(new JLabel(tr("Proxy Settings")), GBC.eol());
         gui.connection.add(proxyEnable, GBC.eol().insets(20, 0, 0, 0));

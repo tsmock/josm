@@ -9,7 +9,7 @@ import java.util.Vector;
 
 /**
  * Internationalisation support.
- * 
+ *
  * @author Immanuel.Scholz
  */
 public class I18n {

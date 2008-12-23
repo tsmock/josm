@@ -12,11 +12,11 @@ import java.util.List;
  * Handles a number of different date formats encountered in OSM. This is built
  * based on similar code in JOSM. This class is not threadsafe, a separate
  * instance must be created per thread.
- * 
+ *
  * @author Brett Henderson
  */
 public class FallbackDateParser {
-    
+
     private static final String[] formats = {
         "yyyy-MM-dd'T'HH:mm:ss'Z'",
         "yyyy-MM-dd'T'HH:mm:ssZ",
@@ -32,12 +32,12 @@ public class FallbackDateParser {
         "MM/dd/yyyy'T'HH:mm:ss",
         "yyyy:MM:dd HH:mm:ss"
     };
-    
-    
+
+
     private List<DateFormat> dateParsers;
     private int activeDateParser;
-    
-    
+
+
     /**
      * Creates a new instance.
      */
@@ -47,15 +47,15 @@ public class FallbackDateParser {
         for (int i = 0; i < formats.length; i++) {
             dateParsers.add(new SimpleDateFormat(formats[i]));
         }
-        
+
         // We haven't selected a date parser yet.
         activeDateParser = -1;
     }
-    
-    
+
+
     /**
      * Attempts to parse the specified date.
-     * 
+     *
      * @param date
      *            The date to parse.
      * @return The date.
@@ -65,7 +65,7 @@ public class FallbackDateParser {
      */
     public Date parse(String date) throws ParseException {
         String correctedDate;
-        
+
         // Try to fix ruby's broken xmlschema - format
         // Replace this:
         // 2007-02-12T18:43:01+00:00
@@ -76,7 +76,7 @@ public class FallbackDateParser {
         } else {
             correctedDate = date;
         }
-        
+
         // If we have previously successfully used a date parser, we'll try it
         // first.
         if (activeDateParser >= 0) {
@@ -88,24 +88,24 @@ public class FallbackDateParser {
                 activeDateParser = -1;
             }
         }
-        
+
         // Try the date parsers one by one until a suitable format is found.
         for (int i = 0; i < dateParsers.size(); i++) {
             try {
                 Date result;
-                
+
                 // Attempt to parse with the current parser, if successful we
                 // store its index for next time.
                 result = dateParsers.get(i).parse(correctedDate);
                 activeDateParser = i;
-                
+
                 return result;
-                
+
             } catch (ParseException pe) {
                 // Ignore parsing errors and try the next pattern.
             }
         }
-        
+
         throw new ParseException("The date string (" + date + ") could not be parsed.", 0);
     }
 }

@@ -46,10 +46,10 @@ public class PreferencesAction extends JosmAction {
         dlg.setResizable(true);
         dlg.setMinimumSize(new Dimension(500,400));
 
-//		if (dlg.getWidth() > 600)
-//			dlg.setSize(600, dlg.getHeight());
-//		if (dlg.getHeight() > 600)
-//			dlg.setSize(dlg.getWidth(),600);
+//      if (dlg.getWidth() > 600)
+//          dlg.setSize(600, dlg.getHeight());
+//      if (dlg.getHeight() > 600)
+//          dlg.setSize(dlg.getWidth(),600);
 
         int JOSMWidth = Main.parent.getWidth();
         int JOSMHeight = Main.parent.getHeight();

@@ -81,12 +81,12 @@ public class PushbackTokenizer {
             }
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
-        }		
+        }
     }
 
     public boolean readIfEqual(String tok) {
         String nextTok = nextToken();
-        if (nextTok == null ? tok == null : nextTok.equals(tok)) 
+        if (nextTok == null ? tok == null : nextTok.equals(tok))
             return true;
         pushBack(nextTok);
         return false;

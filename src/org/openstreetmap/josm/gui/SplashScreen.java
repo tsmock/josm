@@ -29,8 +29,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Show a splash screen so the user knows what is happening during startup.
- * 
- * @author cbrill 
+ *
+ * @author cbrill
  */
 public class SplashScreen extends JWindow {
 
@@ -121,25 +121,25 @@ public class SplashScreen extends JWindow {
                 }
             }
         });
-        
+
         // Hide splashscreen when other window is created
         Toolkit.getDefaultToolkit().addAWTEventListener(awtListener, AWTEvent.WINDOW_EVENT_MASK);
-        
+
         setVisible(true);
     }
-    
+
     private AWTEventListener awtListener = new AWTEventListener() {
         public void eventDispatched(AWTEvent event) {
             if (event.getSource() != SplashScreen.this) {
                 closeSplash();
             }
-        }		
+        }
     };
 
     /**
      * This method sets the status message. It should be called prior to
      * actually doing the action.
-     * 
+     *
      * @param message
      *            the message to be displayed
      */

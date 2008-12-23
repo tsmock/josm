@@ -167,7 +167,7 @@ public class ToolbarPreferences implements PreferenceSetting {
         buttons.add(downButton = createButton("down"));
         upButton.setEnabled(false);
         downButton.setEnabled(false);
-        
+
         final JPanel p = new JPanel();
         p.setLayout(new LayoutManager(){
             public void addLayoutComponent(String name, Component comp) {}
@@ -196,7 +196,7 @@ public class ToolbarPreferences implements PreferenceSetting {
         p.add(buttons);
         p.add(right);
 
-        JPanel panel = gui.createPreferenceTab("toolbar", tr("Toolbar customization"), 
+        JPanel panel = gui.createPreferenceTab("toolbar", tr("Toolbar customization"),
                 tr("Customize the elements on the toolbar."), false);
         panel.add(p, GBC.eol().fill(GBC.BOTH));
 
@@ -261,8 +261,8 @@ public class ToolbarPreferences implements PreferenceSetting {
 
     /**
      * Parse the toolbar preference setting and construct the toolbar GUI control.
-     * 
-     * Call this, if anything has changed in the toolbar settings and you want to refresh 
+     *
+     * Call this, if anything has changed in the toolbar settings and you want to refresh
      * the toolbar content (e.g. after registering actions in a plugin)
      */
     public void refreshToolbarControl() {

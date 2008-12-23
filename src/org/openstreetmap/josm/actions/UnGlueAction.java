@@ -323,13 +323,13 @@ public class UnGlueAction extends JosmAction { //implements SelectionChangedList
 
 // Disabled because we have such a nice help text that would not be shown otherwise.
 //
-//	/**
-//	 * Enable the menu option if the selection looks like we could use it.
-//	 */
-//	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-//		setEnabled(checkSelection(newSelection) || checkSelection2(newSelection));
-//		selectedNode = null;
-//		selectedWay = null;
-//		selectedNodes = null;
-//	}
+//  /**
+//   * Enable the menu option if the selection looks like we could use it.
+//   */
+//  public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+//      setEnabled(checkSelection(newSelection) || checkSelection2(newSelection));
+//      selectedNode = null;
+//      selectedWay = null;
+//      selectedNodes = null;
+//  }
 }

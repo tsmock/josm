@@ -45,8 +45,8 @@ public class ColorPreference implements PreferenceSetting {
     /**
      * Set the colors to be shown in the preference table. This method creates a table model if
      * none exists and overwrites all existing values.
-     * @param colorMap the map holding the colors 
-     * (key = color id (without prefixes, so only <code>background</code>; not <code>color.background</code>), 
+     * @param colorMap the map holding the colors
+     * (key = color id (without prefixes, so only <code>background</code>; not <code>color.background</code>),
      * value = html representation of the color.
      */
     public void setColorModel(Map<String, String> colorMap) {
@@ -55,7 +55,7 @@ public class ColorPreference implements PreferenceSetting {
             tableModel.addColumn(tr("Color"));
             tableModel.addColumn(tr("Name"));
         }
-        
+
         // clear old model:
         while(tableModel.getRowCount() > 0) {
             tableModel.removeRow(0);
@@ -74,9 +74,9 @@ public class ColorPreference implements PreferenceSetting {
         }
         if(this.colors != null) {
             this.colors.repaint();
-        }		
+        }
     }
-    
+
     /**
      * Returns a map with the colors in the table (key = color name without prefix, value = html color code).
      * @return a map holding the colors.
@@ -92,7 +92,7 @@ public class ColorPreference implements PreferenceSetting {
         }
         return colorMap;
     }
-    
+
     public void addGui(final PreferenceDialog gui) {
         // initial fill with colors from preferences:
         Map<String,String> prefColorMap = new TreeMap<String, String>(Main.pref.getAllPrefix("color."));
@@ -102,7 +102,7 @@ public class ColorPreference implements PreferenceSetting {
             colorMap.put(key.substring("color.".length()), prefColorMap.get(key));
         }
         setColorModel(colorMap);
-        
+
         colors = new JTable(tableModel) {
             @Override public boolean isCellEditable(int row, int column) {
                 return false;

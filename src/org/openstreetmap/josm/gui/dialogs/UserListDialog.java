@@ -114,7 +114,7 @@ public class UserListDialog extends ToggleDialog implements SelectionChangedList
         if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
             int index = userTable.getSelectedRow();
             String userName = (String) data.getValueAt(index, 0);
-            if (userName==null) 
+            if (userName==null)
                 return;
             Collection<OsmPrimitive> selected = Main.ds.getSelected();
             Collection<OsmPrimitive> byUser = new LinkedList<OsmPrimitive>();

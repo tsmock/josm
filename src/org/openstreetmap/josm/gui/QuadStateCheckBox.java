@@ -104,7 +104,7 @@ public class QuadStateCheckBox extends JCheckBox {
         /**
          * The current state is embedded in the selection / armed
          * state of the model.
-         * 
+         *
          * We return the SELECTED state when the checkbox is selected
          * but not armed, PARTIAL state when the checkbox is
          * selected and armed (grey) and NOT_SELECTED when the

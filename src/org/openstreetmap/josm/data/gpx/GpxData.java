@@ -14,7 +14,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
  * Objects of this class represent a gpx file with tracks, waypoints and routes.
  * It uses GPX v1.1, see {@link <a href="http://www.topografix.com/GPX/1/1/">the spec</a>}
  * for details.
- * 
+ *
  * @author Raphael Mack <ramack@raphael-mack.de>
  */
 public class GpxData extends WithAttributes {
@@ -100,14 +100,14 @@ public class GpxData extends WithAttributes {
             bounds = new Bounds();
         }
     }
-    
+
     /**
      * calculates the sum of the lengths of all track segments
      */
     public double length(){
         double result = 0.0; // in meters
         WayPoint last = null;
-        
+
         for (GpxTrack trk : tracks) {
             for (Collection<WayPoint> trkseg : trk.trackSegs) {
                 for (WayPoint tpt : trkseg) {
@@ -128,7 +128,7 @@ public class GpxData extends WithAttributes {
     public static double calcDistance(LatLon p1, LatLon p2){
         double lat1, lon1, lat2, lon2;
         double dlon, dlat;
-        
+
         lat1 = p1.lat() * Math.PI / 180.0;
         lon1 = p1.lon() * Math.PI / 180.0;
         lat2 = p2.lat() * Math.PI / 180.0;

@@ -57,16 +57,16 @@ public final class Way extends OsmPrimitive {
      * Create an identical clone of the argument (including the id)
      */
     public Way(Way clone) {
-            cloneFrom(clone);            
+            cloneFrom(clone);
     }
-    
+
     /**
-     * Create an empty way without id. Use this only if you set meaningful 
+     * Create an empty way without id. Use this only if you set meaningful
      * values yourself.
      */
     public Way() {
     }
-    
+
     /**
      * Create an incomplete Way.
      */
@@ -74,7 +74,7 @@ public final class Way extends OsmPrimitive {
         this.id = id;
         incomplete = true;
     }
-    
+
     @Override public void cloneFrom(OsmPrimitive osm) {
         super.cloneFrom(osm);
         nodes.clear();
@@ -104,7 +104,7 @@ public final class Way extends OsmPrimitive {
             name = get("name");
             if (name == null) name = get("ref");
             if (name == null) {
-                name = 
+                name =
                     (get("highway") != null) ? tr("highway") :
                     (get("railway") != null) ? tr("railway") :
                     (get("waterway") != null) ? tr("waterway") :

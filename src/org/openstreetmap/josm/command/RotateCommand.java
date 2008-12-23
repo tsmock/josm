@@ -22,40 +22,40 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * RotateCommand rotates a number of objects around their centre.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  */
 public class RotateCommand extends Command {
-    
+
     /**
      * The objects to rotate.
      */
     public Collection<Node> objects = new LinkedList<Node>();
-    
+
     /**
      * pivot point
      */
     private Node pivot;
-    
+
     /**
      * angle of rotation starting click to pivot
      */
     private double startAngle;
-    
+
     /**
      * computed rotation angle between starting click and current mouse pos
      */
     private double rotationAngle;
-    
+
     /**
      * List of all old states of the objects.
      */
     private Map<Node, MoveCommand.OldState> oldState = new HashMap<Node, MoveCommand.OldState>();
-    
+
     /**
      * Creates a RotateCommand.
      * Assign the initial object set, compute pivot point and rotation angle.
-     * Computation of pivot point is done by the same rules that are used in 
+     * Computation of pivot point is done by the same rules that are used in
      * the "align nodes in circle" action.
      */
     public RotateCommand(Collection<OsmPrimitive> objects, EastNorth start, EastNorth end) {
@@ -80,7 +80,7 @@ public class RotateCommand extends Command {
     }
 
     /**
-     * Rotate the same set of objects again, by the angle between given 
+     * Rotate the same set of objects again, by the angle between given
      * start and end nodes. Internally this is added to the existing
      * rotation so a later undo will undo the whole rotation.
      */
@@ -108,10 +108,10 @@ public class RotateCommand extends Command {
             n.eastNorth = new EastNorth(nx, ny);
             n.coor = Main.proj.eastNorth2latlon(n.eastNorth);
             if (setModified)
-                n.modified = true;	
+                n.modified = true;
         }
     }
-    
+
     @Override public boolean executeCommand() {
         rotateNodes(true);
         return true;

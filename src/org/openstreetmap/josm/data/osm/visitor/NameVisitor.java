@@ -16,7 +16,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Able to create a name and an icon for each data element.
- * 
+ *
  * @author imi
  */
 public class NameVisitor implements Visitor {
@@ -34,7 +34,7 @@ public class NameVisitor implements Visitor {
      * The icon of this item.
      */
     public Icon icon;
-    
+
     /**
      * If the node has a name-key or id-key, this is displayed. If not, (lat,lon)
      * is displayed.
@@ -58,7 +58,7 @@ public class NameVisitor implements Visitor {
         className = "way";
         classNamePlural = trn("way", "ways", 2);
     }
-    
+
     /**
      */
     public void visit(Relation e) {
@@ -68,7 +68,7 @@ public class NameVisitor implements Visitor {
         className = "relation";
         classNamePlural = trn("relation", "relations", 2);
     }
-    
+
     public JLabel toLabel() {
         return new JLabel(name, icon, JLabel.HORIZONTAL);
     }

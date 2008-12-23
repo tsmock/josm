@@ -1,6 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 
-// This class was taken from 
+// This class was taken from
 // http://forum.java.sun.com/thread.jspa?threadID=459705&messageID=2104021
 // - Removed hardcoded margin
 // -  Added constructor
@@ -58,7 +58,7 @@ public class JMultilineLabel extends JComponent {
         int old = this.maxWidth;
         this.maxWidth = maxWidth;
         firePropertyChange("maxWidth", old, this.maxWidth);
-        if (old !=	this.maxWidth)
+        if (old !=  this.maxWidth)
             morph();
     }
 

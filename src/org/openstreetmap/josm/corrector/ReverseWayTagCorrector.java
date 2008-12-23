@@ -29,7 +29,7 @@ public class ReverseWayTagCorrector extends TagCorrector<Way> {
         private final Pattern endPattern;
 
         private final String SEPARATOR = "[:_]?";
-        
+
         public PrefixSuffixSwitcher(String a, String b) {
             this.a = a;
             this.b = b;
@@ -53,22 +53,22 @@ public class ReverseWayTagCorrector extends TagCorrector<Way> {
                 result.append(text.substring(0, m.start(1)));
                 result.append(leftRight.equals(a) ? b : a);
                 result.append(text.substring(m.end(1)));
-                
+
                 return result.toString();
             }
             return text;
         }
     }
 
-    private static PrefixSuffixSwitcher[] prefixSuffixSwitchers = 
+    private static PrefixSuffixSwitcher[] prefixSuffixSwitchers =
             new PrefixSuffixSwitcher[] {
                 new PrefixSuffixSwitcher("left", "right"),
-                new PrefixSuffixSwitcher("forward", "backward") 
+                new PrefixSuffixSwitcher("forward", "backward")
             };
 
     @Override
     public Collection<Command> execute(Way way) throws UserCancelException {
-        Map<OsmPrimitive, List<TagCorrection>> tagCorrectionsMap = 
+        Map<OsmPrimitive, List<TagCorrection>> tagCorrectionsMap =
                 new HashMap<OsmPrimitive, List<TagCorrection>>();
 
         ArrayList<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
@@ -106,7 +106,7 @@ public class ReverseWayTagCorrector extends TagCorrector<Way> {
             }
         }
 
-        Map<OsmPrimitive, List<RoleCorrection>> roleCorrectionMap = 
+        Map<OsmPrimitive, List<RoleCorrection>> roleCorrectionMap =
                 new HashMap<OsmPrimitive, List<RoleCorrection>>();
         roleCorrectionMap.put(way, new ArrayList<RoleCorrection>());
 

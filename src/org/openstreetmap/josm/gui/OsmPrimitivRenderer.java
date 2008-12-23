@@ -16,9 +16,9 @@ import org.openstreetmap.josm.data.osm.visitor.NameVisitor;
 
 /**
  * Renderer that renders the objects from an OsmPrimitive as data.
- * 
+ *
  * Can be used in lists and tables.
- * 
+ *
  * @author imi
  * @author Frederik Ramm <frederik@remote.org>
  */
@@ -33,7 +33,7 @@ public class OsmPrimitivRenderer implements ListCellRenderer, TableCellRenderer 
      * Default list cell renderer - delegate for ListCellRenderer operation
      */
     private DefaultListCellRenderer defaultListCellRenderer = new DefaultListCellRenderer();
-    
+
     /**
      * Default table cell renderer - delegate for TableCellRenderer operation
      */
@@ -48,13 +48,13 @@ public class OsmPrimitivRenderer implements ListCellRenderer, TableCellRenderer 
     }
 
     /**
-     * Adapter method supporting the TableCellRenderer interface. 
+     * Adapter method supporting the TableCellRenderer interface.
      */
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component def = defaultTableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         return renderer(def, (OsmPrimitive) value);
     }
-    
+
     /**
      * Internal method that stuffs information into the rendering component
      * provided that it's a kind of JLabel.
@@ -70,5 +70,5 @@ public class OsmPrimitivRenderer implements ListCellRenderer, TableCellRenderer 
         }
         return def;
     }
-    
+
 }

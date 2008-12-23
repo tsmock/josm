@@ -232,10 +232,10 @@ public class CombineWayAction extends JosmAction implements SelectionChangedList
     private Object actuallyCombineWays(List<Way> ways, boolean ignoreDirection) {
         // Battle plan:
         //  1. Split the ways into small chunks of 2 nodes and weed out
-        //	   duplicates.
+        //     duplicates.
         //  2. Take a chunk and see if others could be appended or prepended,
-        //	   if so, do it and remove it from the list of remaining chunks.
-        //	   Rather, rinse, repeat.
+        //     if so, do it and remove it from the list of remaining chunks.
+        //     Rather, rinse, repeat.
         //  3. If this algorithm does not produce a single way,
         //     complain to the user.
         //  4. Profit!

@@ -8,9 +8,9 @@ import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * A file filter that filters after the extension. Also includes a list of file 
+ * A file filter that filters after the extension. Also includes a list of file
  * filters used in JOSM.
- * 
+ *
  * @author imi
  */
 public class ExtensionFileFilter extends FileFilter {
@@ -21,7 +21,7 @@ public class ExtensionFileFilter extends FileFilter {
     public static final int OSM = 0;
     public static final int GPX = 1;
     public static final int NMEA = 2;
-    
+
     public static ExtensionFileFilter[] filters = {
         new ExtensionFileFilter("osm,xml", "osm", tr("OSM Server Files (*.osm *.xml)")),
         new ExtensionFileFilter("gpx,gpx.gz", "gpx", tr("GPX Files (*.gpx *.gpx.gz)")),

@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 /**
  * Helper class to use for xml outputting classes.
- * 
+ *
  * @author imi
  */
 public class XmlWriter {

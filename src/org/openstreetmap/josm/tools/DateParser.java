@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * Tries to parse a date as good as it can.
- * 
+ *
  * @author Immanuel.Scholz
  */
 public class DateParser {

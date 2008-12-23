@@ -456,7 +456,7 @@ public class DrawAction extends MapMode implements MapViewPaintable, SelectionCh
 
     /**
      * @return If the node is the end of exactly one way, return this.
-     * 	<code>null</code> otherwise.
+     *  <code>null</code> otherwise.
      */
     public static Way getWayForNode(Node n) {
         Way way = null;
@@ -510,7 +510,7 @@ public class DrawAction extends MapMode implements MapViewPaintable, SelectionCh
             return;
         case 2:
             // This computes the intersection between
-            // the two segments and adjusts the node position. 
+            // the two segments and adjusts the node position.
             Iterator<Pair<Node,Node>> i = segs.iterator();
             Pair<Node,Node> seg = i.next();
             EastNorth A = seg.a.eastNorth;
@@ -520,16 +520,16 @@ public class DrawAction extends MapMode implements MapViewPaintable, SelectionCh
             EastNorth D = seg.b.eastNorth;
 
             double u=det(B.east() - A.east(), B.north() - A.north(), C.east() - D.east(), C.north() - D.north());
-            
+
             // Check for parallel segments and do nothing if they are
             // In practice this will probably only happen when a way has been duplicated
-            
+
             if (u == 0) return;
-            
+
             // q is a number between 0 and 1
             // It is the point in the segment where the intersection occurs
             // if the segment is scaled to lenght 1
-            
+
             double q = det(B.north() - C.north(), B.east() - C.east(), D.north() - C.north(), D.east() - C.east()) / u;
             EastNorth intersection = new EastNorth(
                     B.east() + q * (A.east() - B.east()),

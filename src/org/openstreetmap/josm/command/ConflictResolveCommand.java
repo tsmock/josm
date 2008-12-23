@@ -39,7 +39,7 @@ public class ConflictResolveCommand extends Command {
         super.executeCommand();
 
         origAllConflicts = new HashMap<OsmPrimitive, OsmPrimitive>(conflictDialog.conflicts);
-        
+
         Set<OsmPrimitive> completed = new HashSet<OsmPrimitive>(resolved.keySet());
         for (ConflictItem ci : conflicts) {
             for (Entry<OsmPrimitive, OsmPrimitive> e : resolved.entrySet()) {

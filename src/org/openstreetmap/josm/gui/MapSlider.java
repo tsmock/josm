@@ -14,10 +14,10 @@ import org.openstreetmap.josm.actions.HelpAction.Helpful;
 import org.openstreetmap.josm.data.coor.EastNorth;
 
 class MapSlider extends JSlider implements PropertyChangeListener, ChangeListener, Helpful {
-    
+
     private final MapView mv;
     boolean clicked = false;
-    
+
     public MapSlider(MapView mv) {
         super(0, 20);
         setOpaque(false);
@@ -33,12 +33,12 @@ class MapSlider extends JSlider implements PropertyChangeListener, ChangeListene
         mv.addPropertyChangeListener("scale", this);
         addChangeListener(this);
     }
-    
+
     public void propertyChange(PropertyChangeEvent evt) {
         if (!getModel().getValueIsAdjusting())
             setValue(this.mv.zoom());
     }
-    
+
     public void stateChanged(ChangeEvent e) {
         if (!clicked)
             return;

@@ -19,7 +19,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * Command that manipulate the key/value structure of several objects. Manages deletion,
  * adding and modify of values and keys.
- * 
+ *
  * @author imi
  */
 public class ChangePropertyCommand extends Command {
@@ -37,7 +37,7 @@ public class ChangePropertyCommand extends Command {
      * those objects that do not have the key yet.
      */
     private final String value;
-    
+
     public ChangePropertyCommand(Collection<? extends OsmPrimitive> objects, String key, String value) {
         this.objects = new LinkedList<OsmPrimitive>();
         this.key = key;
@@ -66,7 +66,7 @@ public class ChangePropertyCommand extends Command {
         || (value != null && (val == null || !value.equals(val))))
             this.objects.add(object);
     }
-    
+
     @Override public boolean executeCommand() {
         super.executeCommand(); // save old
         if (value == null) {

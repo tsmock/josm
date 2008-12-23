@@ -31,7 +31,7 @@ public class LanguagePreference implements PreferenceSetting {
         langCombo.insertItemAt(Locale.ENGLISH, 1); // Built-in language
         String ln = Main.pref.get("language");
         langCombo.setSelectedIndex(0);
-        
+
         if (ln != null) {
             for (int i = 1; i < langCombo.getItemCount(); ++i) {
                 if (((Locale) langCombo.getItemAt(i)).toString().equals(ln)) {

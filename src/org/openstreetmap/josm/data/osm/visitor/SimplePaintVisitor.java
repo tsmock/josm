@@ -306,7 +306,7 @@ public class SimplePaintVisitor implements Visitor {
     /**
      * Draw the node as small rectangle with the given color.
      *
-     * @param n		The node to draw.
+     * @param n     The node to draw.
      * @param color The color of the node.
      */
     public void drawNode(Node n, Color color, int size, int radius, boolean fill) {

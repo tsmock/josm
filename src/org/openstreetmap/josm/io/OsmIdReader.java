@@ -20,7 +20,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Read only the ids and classes of an stream.
- * 
+ *
  * @author Imi
  */
 public class OsmIdReader extends DefaultHandler {
@@ -52,10 +52,10 @@ public class OsmIdReader extends DefaultHandler {
         } catch (SAXException e) {
             if (!cancel)
                 throw e;
-        }        
+        }
         return entries;
     }
-    
+
     public void cancel() {
         cancel = true;
         if (in != null)

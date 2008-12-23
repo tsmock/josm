@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 
 /**
  * This DataReader reads directly from the REST API of the osm server.
- * 
+ *
  * It supports plain text transfer as well as gzip or deflate encoded transfers;
  * if compressed transfers are unwanted, set property osm-server.use-compression
  * to false.
@@ -38,9 +38,9 @@ public abstract class OsmServerReader extends OsmConnection {
         urlStr = Main.pref.get("osm-server.url")+"/"+version+"/" + urlStr;
         return getInputStreamRaw(urlStr, pleaseWaitDlg);
     }
-    
+
     protected InputStream getInputStreamRaw(String urlStr, PleaseWaitDialog pleaseWaitDlg) throws IOException {
-        
+
         System.out.println("download: "+urlStr);
         initAuthentication();
         URL url = new URL(urlStr);
@@ -49,7 +49,7 @@ public abstract class OsmServerReader extends OsmConnection {
             activeConnection.disconnect();
             return null;
         }
-        
+
         if (Boolean.parseBoolean(Main.pref.get("osm-server.use-compression", "true")))
             activeConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
 
@@ -60,7 +60,7 @@ public abstract class OsmServerReader extends OsmConnection {
         {
             throw new IOException(tr("Server returned internal error. Try a reduced area or retry after waiting some time."));
         }
-//		System.out.println("got return: "+activeConnection.getResponseCode());
+//      System.out.println("got return: "+activeConnection.getResponseCode());
 
         String encoding = activeConnection.getContentEncoding();
         InputStream inputStream = new ProgressInputStream(activeConnection, pleaseWaitDlg);
@@ -72,7 +72,7 @@ public abstract class OsmServerReader extends OsmConnection {
         }
         return inputStream;
     }
-    
+
     public abstract DataSet parseOsm() throws SAXException, IOException;
-    
+
 }

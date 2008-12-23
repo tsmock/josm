@@ -25,19 +25,19 @@ public final class Changeset /*extends OsmPrimitive*/ implements OsmWriterInterf
     public Map<String, String> keys;
 
     public long id = 0;
-    
-    /** 
+
+    /**
      * User that created this changeset, as specified by the server.
      * Never changed by JOSM.
      */
     public User user = null;
-    
+
     /**
      * Time of last modification to this object. This is not set by JOSM but
-     * read from the server and delivered back to the server unmodified. 
+     * read from the server and delivered back to the server unmodified.
      */
     public String end_timestamp = null;
-    
+
     /**
      * Time of first modification to this object. This is not set by JOSM but
      * read from the server and delivered back to the server unmodified.
@@ -71,13 +71,13 @@ public final class Changeset /*extends OsmPrimitive*/ implements OsmWriterInterf
     public final void footer(PrintWriter out) {
         out.println("</osm>");
     }
-    
+
     /******************************************************
      * This tag stuff is copied from OsmPrimitive. Perhaps a changeset
      * really is a primitive, but it's not right now. Perhaps it should
      * be...
      ******************************************************/
-     
+
     /**
      * Set the given value to the given key
      * @param key The key, for which the value is to be set.

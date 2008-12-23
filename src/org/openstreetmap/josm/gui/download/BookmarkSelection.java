@@ -26,25 +26,25 @@ import org.openstreetmap.josm.tools.GBC;
 
 /**
  * Bookmark selector.
- * 
+ *
  * Provides selection, creation and deletion of bookmarks.
  * Extracted from old DownloadAction.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  *
  */
 public class BookmarkSelection implements DownloadSelection {
 
     private Preferences.Bookmark tempBookmark = null;
-    private BookmarkList bookmarks; 
-    
+    private BookmarkList bookmarks;
+
     public void addGui(final DownloadDialog gui) {
-        
+
         JPanel dlg = new JPanel(new GridBagLayout());
         gui.tabpane.addTab(tr("Bookmarks"), dlg);
 
         bookmarks = new BookmarkList();
-        
+
         /* add a handler for "double click" mouse events */
         MouseListener mouseListener = new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
@@ -55,7 +55,7 @@ public class BookmarkSelection implements DownloadSelection {
             }
         };
         bookmarks.addMouseListener(mouseListener);
-        
+
         bookmarks.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 Preferences.Bookmark b = (Preferences.Bookmark)bookmarks.getSelectedValue();
@@ -75,7 +75,7 @@ public class BookmarkSelection implements DownloadSelection {
         JButton add = new JButton(tr("Add"));
         add.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                
+
                 if (tempBookmark == null) {
                     JOptionPane.showMessageDialog(Main.parent, tr("Please enter the desired coordinates first."));
                     return;
@@ -102,7 +102,7 @@ public class BookmarkSelection implements DownloadSelection {
         });
         buttons.add(remove);
         dlg.add(buttons, GBC.eop().fill(GBC.HORIZONTAL));
-    }		
+    }
 
     public void boundingBoxChanged(DownloadDialog gui) {
         tempBookmark = new Preferences.Bookmark();

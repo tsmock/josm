@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * This class read encapsulate one tagging preset. A class method can
  * read in all predefined presets, either shipped with JOSM or that are
  * in the config directory.
- * 
+ *
  * It is also able to construct dialogs out of preset definitions.
  */
 public class TaggingPreset extends AbstractAction {
@@ -63,7 +63,7 @@ public class TaggingPreset extends AbstractAction {
         abstract void addCommands(Collection<OsmPrimitive> sel, List<Command> cmds);
         boolean requestFocusInWindow() {return false;}
     }
-    
+
     public static class Usage {
         Set<String> values;
         Boolean hadKeys = false;
@@ -85,9 +85,9 @@ public class TaggingPreset extends AbstractAction {
             return hadKeys;
         }
     }
-    
+
     public static final String DIFFERENT = tr("<different>");
-    
+
     static Usage determineTextUsage(Collection<OsmPrimitive> sel, String key) {
         Usage returnValue = new Usage();
         returnValue.values = new HashSet<String>();
@@ -112,9 +112,9 @@ public class TaggingPreset extends AbstractAction {
         }
         return returnValue;
     }
-    
+
     public static class Text extends Item {
-        
+
         public String key;
         public String text;
         public String locale_text;
@@ -124,9 +124,9 @@ public class TaggingPreset extends AbstractAction {
         public boolean delete_if_empty = false;
 
         private JComponent value;
-        
+
         @Override public void addToPanel(JPanel p, Collection<OsmPrimitive> sel) {
-            
+
             // find out if our key is already used in the selection.
             Usage usage = determineTextUsage(sel, key);
             if (usage.unused())
@@ -155,12 +155,12 @@ public class TaggingPreset extends AbstractAction {
             p.add(new JLabel(locale_text+":"), GBC.std().insets(0,0,10,0));
             p.add(value, GBC.eol().fill(GBC.HORIZONTAL));
         }
-        
+
         @Override public void addCommands(Collection<OsmPrimitive> sel, List<Command> cmds) {
-            
+
             // return if unchanged
-            String v = (value instanceof JComboBox) ? 
-                ((JComboBox)value).getEditor().getItem().toString() : 
+            String v = (value instanceof JComboBox) ?
+                ((JComboBox)value).getEditor().getItem().toString() :
                 ((JTextField)value).getText();
 
             if (use_last_as_default) lastValue.put(key, v);
@@ -183,9 +183,9 @@ public class TaggingPreset extends AbstractAction {
 
         private QuadStateCheckBox check;
         private QuadStateCheckBox.State initialState;
-        
+
         @Override public void addToPanel(JPanel p, Collection<OsmPrimitive> sel) {
-            
+
             // find out if our key is already used in the selection.
             Usage usage = determineBooleanUsage(sel, key);
 
@@ -195,15 +195,15 @@ public class TaggingPreset extends AbstractAction {
             String oneValue = null;
             for (String s : usage.values) oneValue = s;
             if (usage.values.size() < 2 && (oneValue == null || OsmUtils.trueval.equals(oneValue) || OsmUtils.falseval.equals(oneValue))) {
-                // all selected objects share the same value which is either true or false or unset, 
+                // all selected objects share the same value which is either true or false or unset,
                 // we can display a standard check box.
-                initialState = OsmUtils.trueval.equals(oneValue) ? 
+                initialState = OsmUtils.trueval.equals(oneValue) ?
                             QuadStateCheckBox.State.SELECTED :
-                            OsmUtils.falseval.equals(oneValue) ? 
+                            OsmUtils.falseval.equals(oneValue) ?
                             QuadStateCheckBox.State.NOT_SELECTED :
                             QuadStateCheckBox.State.UNSET;
-                check = new QuadStateCheckBox(locale_text, initialState, 
-                        new QuadStateCheckBox.State[] { 
+                check = new QuadStateCheckBox(locale_text, initialState,
+                        new QuadStateCheckBox.State[] {
                         QuadStateCheckBox.State.SELECTED,
                         QuadStateCheckBox.State.NOT_SELECTED,
                         QuadStateCheckBox.State.UNSET });
@@ -212,8 +212,8 @@ public class TaggingPreset extends AbstractAction {
                 // else than true/false. we display a quad-state check box
                 // in "partial" state.
                 initialState = QuadStateCheckBox.State.PARTIAL;
-                check = new QuadStateCheckBox(locale_text, QuadStateCheckBox.State.PARTIAL, 
-                        new QuadStateCheckBox.State[] { 
+                check = new QuadStateCheckBox(locale_text, QuadStateCheckBox.State.PARTIAL,
+                        new QuadStateCheckBox.State[] {
                         QuadStateCheckBox.State.PARTIAL,
                         QuadStateCheckBox.State.SELECTED,
                         QuadStateCheckBox.State.NOT_SELECTED,
@@ -221,13 +221,13 @@ public class TaggingPreset extends AbstractAction {
             }
             p.add(check, GBC.eol().fill(GBC.HORIZONTAL));
         }
-        
+
         @Override public void addCommands(Collection<OsmPrimitive> sel, List<Command> cmds) {
             // if the user hasn't changed anything, don't create a command.
             if (check.getState() == initialState) return;
-            
+
             // otherwise change things according to the selected value.
-            cmds.add(new ChangePropertyCommand(sel, key, 
+            cmds.add(new ChangePropertyCommand(sel, key,
                     check.getState() == QuadStateCheckBox.State.SELECTED ? OsmUtils.trueval :
                     check.getState() == QuadStateCheckBox.State.NOT_SELECTED ? OsmUtils.falseval :
                     null));
@@ -236,7 +236,7 @@ public class TaggingPreset extends AbstractAction {
     }
 
     public static class Combo extends Item {
-        
+
         public String key;
         public String text;
         public String locale_text;
@@ -252,12 +252,12 @@ public class TaggingPreset extends AbstractAction {
         private LinkedHashMap<String,String> lhm;
         private Usage usage;
         private String originalValue;
-        
+
         @Override public void addToPanel(JPanel p, Collection<OsmPrimitive> sel) {
-            
+
             // find out if our key is already used in the selection.
             usage = determineTextUsage(sel, key);
-            
+
             String[] value_array = values.split(",");
             String[] display_array;
             if(locale_display_values != null)
@@ -336,7 +336,7 @@ public class TaggingPreset extends AbstractAction {
 
             // no change if same as before
             if (value.equals(originalValue) || (originalValue == null && (value == null || value.length() == 0))) return;
-            
+
             if (delete_if_empty && value != null && value.length() == 0)
                 value = null;
             cmds.add(new ChangePropertyCommand(sel, key, value));
@@ -400,7 +400,7 @@ public class TaggingPreset extends AbstractAction {
     }
     /**
      * Called from the XML parser to set the icon
-     * 
+     *
      * FIXME for Java 1.6 - use 24x24 icons for LARGE_ICON_KEY (button bar)
      * and the 16x16 icons for SMALL_ICON.
      */
@@ -460,7 +460,7 @@ public class TaggingPreset extends AbstractAction {
                     lastmenu = tp;
                     all.add(tp);
                     Main.toolbar.register(tp);
-                    
+
                 }
             } else if (o instanceof TaggingPresetSeparator) {
                 TaggingPresetSeparator tp = (TaggingPresetSeparator) o;
@@ -481,13 +481,13 @@ public class TaggingPreset extends AbstractAction {
     public static Collection<TaggingPreset> readFromPreferences() {
         LinkedList<TaggingPreset> allPresets = new LinkedList<TaggingPreset>();
         String allTaggingPresets = Main.pref.get("taggingpreset.sources");
-        
+
         if (Main.pref.getBoolean("taggingpreset.enable-defaults", true))
         {
             allTaggingPresets = "resource://presets/presets.xml"
             + (allTaggingPresets != null ? ";"+allTaggingPresets : "");
         }
-        
+
         for(String source : allTaggingPresets.split(";"))
         {
             try {

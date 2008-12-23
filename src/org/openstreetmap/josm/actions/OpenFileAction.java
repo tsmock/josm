@@ -118,7 +118,7 @@ public class OpenFileAction extends DiskAccessAction {
             throw new IllegalStateException();
         }
     }
-    
+
     private void showNmeaInfobox(boolean success, NmeaReader r) {
         String msg = tr("Coordinates imported: ") + r.getNumberOfCoordinates() + "\n" +
         tr("Malformed sentences: ") + r.getParserMalformed() + "\n" +
@@ -126,7 +126,7 @@ public class OpenFileAction extends DiskAccessAction {
         if(!success) // don't scare the user unneccessarily
             msg += tr("Unknown sentences: ") + r.getParserUnknown() + "\n";
         msg += tr("Zero coordinates: ") + r.getParserZeroCoordinates();
-        if(success) {	
+        if(success) {
             JOptionPane.showMessageDialog(
                 Main.parent, msg,
                 tr("NMEA import success"),JOptionPane.INFORMATION_MESSAGE);

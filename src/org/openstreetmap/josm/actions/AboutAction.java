@@ -59,7 +59,7 @@ public class AboutAction extends JosmAction {
         URL u = Main.class.getResource("/REVISION");
         if(u == null) {
             try {
-                u = new URL("jar:" + Main.class.getProtectionDomain().getCodeSource().getLocation().toString() 
+                u = new URL("jar:" + Main.class.getProtectionDomain().getCodeSource().getLocation().toString()
                         + "!/META-INF/MANIFEST.MF");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -98,7 +98,7 @@ public class AboutAction extends JosmAction {
         }
         return myVersion;
     }
-    
+
     /**
      * check whether the version is a development build out of SVN.
      * @return true if it is a SVN unofficial build
@@ -106,7 +106,7 @@ public class AboutAction extends JosmAction {
     public static boolean isDevelopmentVersion() {
         return version.endsWith(" SVN");
     }
-    
+
     public AboutAction() {
         super(tr("About"), "about", tr("Display the about screen."), Shortcut.registerShortcut("system:about", tr("About"), KeyEvent.VK_F1, Shortcut.GROUP_DIRECT, Shortcut.SHIFT_DEFAULT), true);
     }
@@ -179,7 +179,7 @@ public class AboutAction extends JosmAction {
     /**
      * Retrieve the latest JOSM version from the JOSM homepage.
      * @return An string with the latest version or "UNKNOWN" in case
-     * 		of problems (e.g. no internet connection).
+     *      of problems (e.g. no internet connection).
      */
     public static String checkLatestVersion() {
         String latest;
@@ -197,7 +197,7 @@ public class AboutAction extends JosmAction {
     /**
      * Load the specified resource into an TextArea and return it.
      * @param resource The resource url to load
-     * @return	An read-only text area with the content of "resource"
+     * @return  An read-only text area with the content of "resource"
      */
     private static JTextArea loadFile(URL resource) {
         JTextArea area = new JTextArea(tr("File could not be found."));

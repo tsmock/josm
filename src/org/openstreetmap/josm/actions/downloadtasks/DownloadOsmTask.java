@@ -79,19 +79,19 @@ public class DownloadOsmTask implements DownloadTask {
         if (minlon > maxlon) {
             double t = minlon; minlon = maxlon; maxlon = t;
         }
-    
+
         Task task = new Task(action != null && (action.dialog == null || action.dialog.newLayer.isSelected()), new BoundingBoxDownloader(minlat, minlon, maxlat, maxlon));
         currentBounds = new Bounds(new LatLon(minlat, minlon), new LatLon(maxlat, maxlon));
         Main.worker.execute(task);
     }
-    
+
     public void loadUrl(boolean new_layer, String url) {
         Task task = new Task(new_layer, new OsmServerLocationReader(url));
         Main.worker.execute(task);
     }
-    
-    
-    
+
+
+
 
     public JCheckBox getCheckBox() {
         return checkBox;

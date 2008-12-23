@@ -45,7 +45,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * A panel which implement the conflict resolving of a set of primitive-pairs. There will be
  * three tables in the screen, one for each both sides and one resulting table. The user can
  * move items from either one of the sides ("my" and "their") to the resulting table.
- * 
+ *
  * @author Imi
  */
 public class ConflictResolver extends JPanel {
@@ -128,7 +128,7 @@ public class ConflictResolver extends JPanel {
     private final ConflictTableModel resolve = new ConflictTableModel(null);
     private final JTable resolveTable;
 
-    
+
     public ConflictResolver(Map<OsmPrimitive, OsmPrimitive> conflicts) {
         super(new GridBagLayout());
         Collection<ConflictItem> possibleConflicts = new ArrayList<ConflictItem>();
@@ -141,7 +141,7 @@ public class ConflictResolver extends JPanel {
         }
         for (String s : allkeys)
             possibleConflicts.add(new PropertyConflict(s));
-        
+
         for (Entry<OsmPrimitive, OsmPrimitive> e : conflicts.entrySet()) {
             for (Iterator<ConflictItem> it = possibleConflicts.iterator(); it.hasNext();) {
                 ConflictItem ci = it.next();
@@ -152,14 +152,14 @@ public class ConflictResolver extends JPanel {
                 }
             }
         }
-        
+
 
         // have to initialize the JTables here and not in the declaration, because its constructor
         // may access this.conflicts (indirectly)
         myTable = new JTable(my);
         theirTable = new JTable(their);
         resolveTable = new JTable(resolve);
-        
+
         myTable.setPreferredScrollableViewportSize(new Dimension(250,70));
         theirTable.setPreferredScrollableViewportSize(new Dimension(250,70));
         resolveTable.setPreferredScrollableViewportSize(new Dimension(250,70));

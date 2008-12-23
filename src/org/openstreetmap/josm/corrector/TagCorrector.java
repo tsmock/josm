@@ -32,15 +32,15 @@ import org.openstreetmap.josm.tools.GBC;
 
 public abstract class TagCorrector<P extends OsmPrimitive> {
 
-    public abstract Collection<Command> execute(P primitive) 
+    public abstract Collection<Command> execute(P primitive)
         throws UserCancelException;
 
-    private String[] applicationOptions = new String[] { 
-        tr("Apply selected changes"), 
-        tr("Don't apply changes"), 
-        tr("Cancel") 
+    private String[] applicationOptions = new String[] {
+        tr("Apply selected changes"),
+        tr("Don't apply changes"),
+        tr("Cancel")
     };
-    
+
     protected Collection<Command> applyCorrections(
             Map<OsmPrimitive, List<TagCorrection>> tagCorrectionsMap,
             Map<OsmPrimitive, List<RoleCorrection>> roleCorrectionMap,
@@ -65,9 +65,9 @@ public abstract class TagCorrector<P extends OsmPrimitive> {
 
         if (hasCorrections) {
             Collection<Command> commands = new ArrayList<Command>();
-            Map<OsmPrimitive, TagCorrectionTable> tagTableMap = 
+            Map<OsmPrimitive, TagCorrectionTable> tagTableMap =
                 new HashMap<OsmPrimitive, TagCorrectionTable>();
-            Map<OsmPrimitive, RoleCorrectionTable> roleTableMap = 
+            Map<OsmPrimitive, RoleCorrectionTable> roleTableMap =
                 new HashMap<OsmPrimitive, RoleCorrectionTable>();
 
             NameVisitor nameVisitor = new NameVisitor();
@@ -133,24 +133,24 @@ public abstract class TagCorrector<P extends OsmPrimitive> {
 
             int answer = JOptionPane.showOptionDialog(Main.parent, p,
                     tr("Automatic tag correction"), JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE, null, 
+                    JOptionPane.PLAIN_MESSAGE, null,
                     applicationOptions, applicationOptions[0]);
 
             if (answer == JOptionPane.YES_OPTION) {
                 for (OsmPrimitive primitive : tagCorrectionsMap.keySet()) {
-                    List<TagCorrection> tagCorrections = 
+                    List<TagCorrection> tagCorrections =
                         tagCorrectionsMap.get(primitive);
-                    
+
                     // create the clone
                     OsmPrimitive clone = null;
                     if (primitive instanceof Way) clone = new Way((Way)primitive);
                     else if (primitive instanceof Node) clone = new Node((Node)primitive);
                     else if (primitive instanceof Relation) clone = new Relation((Relation)primitive);
-                    
+
                     // use this structure to remember keys that have been set already so that
                     // they're not dropped by a later step
                     Set<String> keysChanged = new HashSet<String>();
-                    
+
                     // apply all changes to this clone
                     for (int i = 0; i < tagCorrections.size(); i++) {
                         if (tagTableMap.get(primitive).getCorrectionTableModel().getApply(i)) {
@@ -160,7 +160,7 @@ public abstract class TagCorrector<P extends OsmPrimitive> {
                             keysChanged.add(tagCorrection.newKey);
                         }
                     }
-                    
+
                     // save the clone
                     if (!keysChanged.isEmpty()) commands.add(new ChangeCommand(primitive, clone));
                 }

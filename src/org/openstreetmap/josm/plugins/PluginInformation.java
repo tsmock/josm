@@ -28,7 +28,7 @@ import org.openstreetmap.josm.Main;
  * @author imi
  */
 public class PluginInformation {
-    
+
     public final File file;
     public final String name;
     public final String mainversion;
@@ -45,9 +45,9 @@ public class PluginInformation {
     /**
      * Used in the Plugin constructor to make the information of the plugin
      * that is currently initializing available.
-     * 
-     * If you think this is hacky, you are probably right. But it is 
-     * convinient anyway ;-) 
+     *
+     * If you think this is hacky, you are probably right. But it is
+     * convinient anyway ;-)
      */
     static PluginInformation currentPluginInitialization = null;
 
@@ -156,7 +156,7 @@ public class PluginInformation {
     /**
      * Try to find a plugin after some criterias. Extract the plugin-information
      * from the plugin and return it. The plugin is searched in the following way:
-     * 
+     *
      *<li>first look after an MANIFEST.MF in the package org.openstreetmap.josm.plugins.<plugin name>
      *    (After removing all fancy characters from the plugin name).
      *    If found, the plugin is loaded using the bootstrap classloader.
@@ -164,28 +164,28 @@ public class PluginInformation {
      *    (~/.josm/plugins/<plugin name>.jar)
      *<li>If not found and the environment variable JOSM_RESSOURCES + "/plugins/" exist, look there.
      *<li>Try for the java property josm.ressources + "/plugins/" (set via java -Djosm.plugins.path=...)
-     *<li>If the environment variable ALLUSERSPROFILE and APPDATA exist, look in 
-     *    ALLUSERSPROFILE/<the last stuff from APPDATA>/JOSM/plugins. 
-     *    (*sic* There is no easy way under Windows to get the All User's application 
+     *<li>If the environment variable ALLUSERSPROFILE and APPDATA exist, look in
+     *    ALLUSERSPROFILE/<the last stuff from APPDATA>/JOSM/plugins.
+     *    (*sic* There is no easy way under Windows to get the All User's application
      *    directory)
-     *<li>Finally, look in some typical unix paths:<ul> 
+     *<li>Finally, look in some typical unix paths:<ul>
      *    <li>/usr/local/share/josm/plugins/
      *    <li>/usr/local/lib/josm/plugins/
      *    <li>/usr/share/josm/plugins/
      *    <li>/usr/lib/josm/plugins/
-     * 
+     *
      * If a plugin class or jar file is found earlier in the list but seem not to
      * be working, an PluginException is thrown rather than continuing the search.
      * This is so JOSM can detect broken user-provided plugins and do not go silently
-     * ignore them. 
-     * 
+     * ignore them.
+     *
      * The plugin is not initialized. If the plugin is a .jar file, it is not loaded
-     * (only the manifest is extracted). In the classloader-case, the class is 
+     * (only the manifest is extracted). In the classloader-case, the class is
      * bootstraped (e.g. static {} - declarations will run. However, nothing else is done.
      *
      * @param pluginName The name of the plugin (in all lowercase). E.g. "lang-de"
      * @return Information about the plugin or <code>null</code>, if the plugin
-     * 	       was nowhere to be found.
+     *         was nowhere to be found.
      * @throws PluginException In case of broken plugins.
      */
     public static PluginInformation findPlugin(String pluginName) throws PluginException {
@@ -214,14 +214,14 @@ public class PluginInformation {
             all.add(s+"plugins");
         return all;
     }
-    
-    
+
+
     /**
      * Return information about a loaded plugin.
-     * 
+     *
      * Note that if you call this in your plugins bootstrap, you may get <code>null</code> if
      * the plugin requested is not loaded yet.
-     * 
+     *
      * @return The PluginInformation to a specific plugin, but only if the plugin is loaded.
      * If it is not loaded, <code>null</code> is returned.
      */

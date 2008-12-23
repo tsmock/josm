@@ -750,7 +750,7 @@ public class GpxLayer extends Layer {
 
     /**
      * Action that issues a series of download requests to the API, following the GPX track.
-     * 
+     *
      * @author fred
      */
     public class DownloadAlongTrackAction extends AbstractAction {
@@ -761,17 +761,17 @@ public class GpxLayer extends Layer {
             JPanel msg = new JPanel(new GridBagLayout());
             JList buffer = new JList(new String[] { "50 metres", "500 metres", "5000 metres" });
             JList maxRect = new JList(new String[] { "1 sq km", "5 sq km", "10 sq km", "20 sq km" });
-            
+
             msg.add(new JLabel(tr("Download everything within:")), GBC.eol());
             msg.add(buffer, GBC.eol());
             msg.add(new JLabel(tr("Maximum area per request:")), GBC.eol());
             msg.add(maxRect, GBC.eol());
-            
-            if (JOptionPane.showConfirmDialog(Main.parent, msg, 
-                tr("Download from OSM along this track"), 
+
+            if (JOptionPane.showConfirmDialog(Main.parent, msg,
+                tr("Download from OSM along this track"),
                 JOptionPane.OK_CANCEL_OPTION) == JOptionPane.CANCEL_OPTION) {
                 return;
-            
+
             }
 
             /*
@@ -780,7 +780,7 @@ public class GpxLayer extends Layer {
              */
             double latsum = 0;
             int latcnt = 0;
-            
+
             for (GpxTrack trk : data.tracks) {
                 for (Collection<WayPoint> segment : trk.trackSegs) {
                     for (WayPoint p : segment) {
@@ -789,15 +789,15 @@ public class GpxLayer extends Layer {
                     }
                 }
             }
-            
+
             double avglat = latsum / latcnt;
             double scale = Math.cos(Math.toRadians(avglat));
 
             /*
              * Compute buffer zone extents and maximum bounding box size. Note how the
              * maximum we ever offer is a bbox area of 0.002, while the API theoretically
-             * supports 0.25, but as soon as you touch any built-up area, that kind of 
-             * bounding box will download forever and then stop because it has more than 
+             * supports 0.25, but as soon as you touch any built-up area, that kind of
+             * bounding box will download forever and then stop because it has more than
              * 50k nodes.
              */
             double buffer_y;
@@ -808,7 +808,7 @@ public class GpxLayer extends Layer {
             default: buffer_y = .05;
             }
             buffer_x = buffer_y / scale;
-            
+
             double max_area;
             switch(maxRect.getSelectedIndex()) {
             case 0: max_area = 0.0001 / scale; break;
@@ -819,7 +819,7 @@ public class GpxLayer extends Layer {
 
             Area a = new Area();
             Rectangle2D r = new Rectangle2D.Double();
-            
+
             /*
              * Collect the combined area of all gpx points plus buffer zones around them.
              * This is rather inefficient (may take 20 seconds and more for large tracks);
@@ -835,7 +835,7 @@ public class GpxLayer extends Layer {
                     }
                 }
             }
-            
+
             /*
              * Area "a" now contains the hull that we would like to download data for.
              * however we can only download rectangles, so the following is an attemt at
@@ -857,22 +857,22 @@ public class GpxLayer extends Layer {
              * full upper and lower rectangle, only the part of the upper/lower rectangle that
              * actually has something in it.
              */
-            
+
             List<Rectangle2D> toDownload = new ArrayList<Rectangle2D>();
-            
+
             addToDownload(a, a.getBounds(), toDownload, max_area);
-            
+
             msg = new JPanel(new GridBagLayout());
-                       
+
             msg.add(new JLabel(tr("<html>This action will require {0} individual<br>download requests. Do you wish<br>to continue?</html>",
                 toDownload.size())), GBC.eol());
-            
-            if (JOptionPane.showConfirmDialog(Main.parent, msg, 
-                tr("Download from OSM along this track"), 
+
+            if (JOptionPane.showConfirmDialog(Main.parent, msg,
+                tr("Download from OSM along this track"),
                 JOptionPane.OK_CANCEL_OPTION) == JOptionPane.CANCEL_OPTION) {
                 return;
             }
-            
+
             // FIXME: DownloadTask's "please wait" dialog should display the number of
             // downloads left, and "cancel" needs to be honoured. An error along the way
             // should abort the whole process.
@@ -882,7 +882,7 @@ public class GpxLayer extends Layer {
             }
         }
     }
-    
+
     private static void addToDownload(Area a, Rectangle2D r, Collection<Rectangle2D> results, double max_area) {
         Area tmp = new Area(r);
         // intersect with sought-after area
@@ -908,7 +908,7 @@ public class GpxLayer extends Layer {
             results.add(bounds);
         }
     }
-    
+
     /**
      * Makes a new marker layer derived from this GpxLayer containing at least one
      * audio marker which the given audio file is associated with.

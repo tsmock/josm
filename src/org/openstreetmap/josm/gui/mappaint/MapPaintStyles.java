@@ -17,7 +17,7 @@ public class MapPaintStyles {
 
     private static ElemStyles styles = new ElemStyles();
     private static String iconDirs;
-    
+
     public static ElemStyles getStyles()
     {
         return styles;
@@ -38,7 +38,7 @@ public class MapPaintStyles {
             if(a[0].length() == 0 || styleName.equals(a[0]))
                 dirs.add(a[1]);
         }
-        ImageIcon i = ImageProvider.getIfAvailable(dirs, "mappaint."+styleName, null, name);		
+        ImageIcon i = ImageProvider.getIfAvailable(dirs, "mappaint."+styleName, null, name);
         if(i == null)
         {
             System.out.println("Mappaint-Style \""+styleName+"\" icon \"" + name + "\" not found.");
@@ -77,7 +77,7 @@ public class MapPaintStyles {
             {
                 System.out.println("Mappaint-Style problems: \"" + fileset + "\"");
             }
-        } 
+        }
         iconDirs = null;
     }
 

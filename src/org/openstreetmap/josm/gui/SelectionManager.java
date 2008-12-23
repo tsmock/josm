@@ -22,26 +22,26 @@ import org.openstreetmap.josm.data.osm.Way;
 /**
  * Manages the selection of a rectangle. Listening to left and right mouse button
  * presses and to mouse motions and draw the rectangle accordingly.
- * 
+ *
  * Left mouse button selects a rectangle from the press until release. Pressing
  * right mouse button while left is still pressed enable the rectangle to move
  * around. Releasing the left button fires an action event to the listener given
  * at constructor, except if the right is still pressed, which just remove the
  * selection rectangle and does nothing.
- * 
- * The point where the left mouse button was pressed and the current mouse 
+ *
+ * The point where the left mouse button was pressed and the current mouse
  * position are two opposite corners of the selection rectangle.
- * 
- * It is possible to specify an aspect ratio (width per height) which the 
+ *
+ * It is possible to specify an aspect ratio (width per height) which the
  * selection rectangle always must have. In this case, the selection rectangle
  * will be the largest window with this aspect ratio, where the position the left
- * mouse button was pressed and the corner of the current mouse position are at 
+ * mouse button was pressed and the corner of the current mouse position are at
  * opposite sites (the mouse position corner is the corner nearest to the mouse
- * cursor). 
- * 
- * When the left mouse button was released, an ActionEvent is send to the 
+ * cursor).
+ *
+ * When the left mouse button was released, an ActionEvent is send to the
  * ActionListener given at constructor. The source of this event is this manager.
- * 
+ *
  * @author imi
  */
 public class SelectionManager implements MouseListener, MouseMotionListener, PropertyChangeListener {
@@ -57,7 +57,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
          * @param r The rectangle that is currently the selection.
          * @param alt Whether the alt key was pressed
          * @param shift Whether the shift key was pressed
-         * @param ctrl Whether the ctrl key was pressed 
+         * @param ctrl Whether the ctrl key was pressed
          * @see InputEvent#getModifiersEx()
          */
         public void selectionEnded(Rectangle r, boolean alt, boolean shift, boolean ctrl);
@@ -67,7 +67,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
          */
         public void addPropertyChangeListener(PropertyChangeListener listener);
         /**
-         * Called to remove the selection manager from the listener list 
+         * Called to remove the selection manager from the listener list
          * for "active" property.
          * @param listener The listener to register
          */
@@ -79,7 +79,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
     private final SelectionEnded selectionEndedListener;
     /**
      * Position of the map when the mouse button was pressed.
-     * If this is not <code>null</code>, a rectangle is drawn on screen. 
+     * If this is not <code>null</code>, a rectangle is drawn on screen.
      */
     private Point mousePosStart;
     /**
@@ -91,7 +91,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
      */
     private final NavigatableComponent nc;
     /**
-     * Whether the selection rectangle must obtain the aspect ratio of the 
+     * Whether the selection rectangle must obtain the aspect ratio of the
      * drawComponent.
      */
     private boolean aspectRatio;
@@ -100,9 +100,9 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
      * Create a new SelectionManager.
      *
      * @param selectionEndedListener The action listener that receives the event when
-     * 		the left button is released.
+     *      the left button is released.
      * @param aspectRatio If true, the selection window must obtain the aspect
-     * 		ratio of the drawComponent.
+     *      ratio of the drawComponent.
      * @param navComp The component, the rectangle is drawn onto.
      */
     public SelectionManager(SelectionEnded selectionEndedListener, boolean aspectRatio, NavigatableComponent navComp) {
@@ -110,7 +110,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
         this.aspectRatio = aspectRatio;
         this.nc = navComp;
     }
-    
+
     /**
      * Register itself at the given event source.
      * @param eventSource The emitter of the mouse events.
@@ -152,15 +152,15 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
      * If the correct button is hold, draw the rectangle.
      */
     public void mouseDragged(MouseEvent e) {
-        int buttonPressed = e.getModifiersEx() & (MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK); 
+        int buttonPressed = e.getModifiersEx() & (MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK);
 
-        
+
         if (buttonPressed != 0) {
             if (mousePosStart == null)
                 mousePosStart = mousePos = e.getPoint();
             paintRect();
         }
-        
+
         if (buttonPressed == MouseEvent.BUTTON1_DOWN_MASK) {
             mousePos = e.getPoint();
             paintRect();
@@ -180,7 +180,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
             return;
         if (mousePos == null || mousePosStart == null)
             return; // injected release from outside
-            
+
         // disable the selection rect
         paintRect();
         Rectangle r = getSelectionRectangle();
@@ -227,7 +227,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
             y += h;
             h = -h;
         }
-        
+
         if (aspectRatio) {
             /* Keep the aspect ratio by growing the rectangle; the
              * rectangle is always under the cursor. */
@@ -244,7 +244,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
                 h = newh;
             }
         }
-        
+
         return new Rectangle(x,y,w,h);
     }
 
@@ -263,7 +263,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
      * Return a list of all objects in the rectangle, respecting the different
      * modifier.
      * @param alt Whether the alt key was pressed, which means select all objects
-     * 		that are touched, instead those which are completly covered.
+     *      that are touched, instead those which are completly covered.
      */
     public Collection<OsmPrimitive> getObjectsInRectangle(Rectangle r, boolean alt) {
         Collection<OsmPrimitive> selection = new LinkedList<OsmPrimitive>();
@@ -282,7 +282,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
                 if (!n.deleted && !n.incomplete && r.contains(nc.getPoint(n.eastNorth)))
                     selection.add(n);
             }
-            
+
             // ways
             for (Way w : nc.getData().ways) {
                 if (w.deleted || w.nodes.isEmpty() || w.incomplete)
@@ -308,7 +308,7 @@ public class SelectionManager implements MouseListener, MouseMotionListener, Pro
         }
         return selection;
     }
-    
+
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}

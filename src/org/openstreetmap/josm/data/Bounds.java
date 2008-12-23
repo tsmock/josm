@@ -7,9 +7,9 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 
 /**
- * This is a simple data class for "rectangular" areas of the world, given in 
+ * This is a simple data class for "rectangular" areas of the world, given in
  * lat/lon min/max values.
- * 
+ *
  * @author imi
  */
 public class Bounds {
@@ -33,7 +33,7 @@ public class Bounds {
         min = new LatLon(-Projection.MAX_LAT, -Projection.MAX_LON);
         max = new LatLon(Projection.MAX_LAT, Projection.MAX_LON);
     }
-    
+
     @Override public String toString() {
         return "Bounds["+min.lat()+","+min.lon()+","+max.lat()+","+max.lon()+"]";
     }
@@ -47,7 +47,7 @@ public class Bounds {
         // dimension?
         return new LatLon((min.lat()+max.lat())/2, (min.lon()+max.lon())/2);
     }
-    
+
     /**
      * Extend the bounds if necessary to include the given point.
      */
@@ -67,7 +67,7 @@ public class Bounds {
             return false;
         return true;
     }
-    
+
     /**
      * Converts the lat/lon bounding box to an object of type Rectangle2D.Double
      * @return the bounding box to Rectangle2D.Double

@@ -1,17 +1,17 @@
 package org.openstreetmap.josm.data.osm;
 
 /**
- * A linkage class that can be used by an relation to keep a list of 
+ * A linkage class that can be used by an relation to keep a list of
  * members. Since membership may be qualified by a "role", a simple
  * list is not sufficient.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  */
 public class RelationMember {
 
     public String role;
     public OsmPrimitive member;
-    
+
     /**
      * Default constructor. Does nothing.
      */
@@ -21,7 +21,7 @@ public class RelationMember {
         this.role = role;
         this.member = member;
     }
-    
+
     /**
      * Copy constructor.
      * @param other relation member to be copied.
@@ -30,7 +30,7 @@ public class RelationMember {
         role = other.role;
         member = other.member;
     }
-    
+
     @Override public boolean equals(Object other) {
         if (!(other instanceof RelationMember)) return false;
         RelationMember otherMember = (RelationMember) other;

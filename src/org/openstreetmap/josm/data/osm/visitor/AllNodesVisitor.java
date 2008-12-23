@@ -12,7 +12,7 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Collect all nodes a specific osm primitive has.
- * 
+ *
  * @author imi
  */
 public class AllNodesVisitor implements Visitor {

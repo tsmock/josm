@@ -23,7 +23,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
  * A plugin may subclass this abstract base class (but it is optional).
  *
  * The actual implementation of this class is optional, as all functions will be called
- * via reflection. This is to be able to change this interface without the need of 
+ * via reflection. This is to be able to change this interface without the need of
  * recompiling or even breaking the plugins. If your class does not provide a
  * function here (or does provide a function with a mismatching signature), it will not
  * be called. That simple.
@@ -31,7 +31,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
  * Or in other words: See this base class as an documentation of what automatic callbacks
  * are provided (you can register yourself to more callbacks in your plugin class
  * constructor).
- * 
+ *
  * Subclassing Plugin and overriding some functions makes it easy for you to keep sync
  * with the correct actual plugin architecture of JOSM.
  *
@@ -67,13 +67,13 @@ public abstract class Plugin {
      * if any available.
      */
     public PreferenceSetting getPreferenceSetting() { return null; }
-    
+
     /**
      * Called in the download dialog to give the plugin a chance to modify the list
      * of bounding box selectors.
      */
     public void addDownloadSelection(List<DownloadSelection> list) {}
-    
+
     /**
      * Copies the ressource 'from' to the file in the plugin directory named 'to'.
      */

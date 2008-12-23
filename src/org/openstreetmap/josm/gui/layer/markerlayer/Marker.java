@@ -22,26 +22,26 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * Basic marker class. Requires a position, and supports 
+ * Basic marker class. Requires a position, and supports
  * a custom icon and a name.
- * 
+ *
  * This class is also used to create appropriate Marker-type objects
  * when waypoints are imported.
- * 
+ *
  * It hosts a public list object, named makers, containing implementations of
- * the MarkerMaker interface. Whenever a Marker needs to be created, each 
+ * the MarkerMaker interface. Whenever a Marker needs to be created, each
  * object in makers is called with the waypoint parameters (Lat/Lon and tag
  * data), and the first one to return a Marker object wins.
- * 
+ *
  * By default, one the list contains one default "Maker" implementation that
- * will create AudioMarkers for .wav files, ImageMarkers for .png/.jpg/.jpeg 
+ * will create AudioMarkers for .wav files, ImageMarkers for .png/.jpg/.jpeg
  * files, and WebMarkers for everything else. (The creation of a WebMarker will
  * fail if there's no vaild URL in the <link> tag, so it might still make sense
  * to add Makers for such waypoints at the end of the list.)
- * 
+ *
  * The default implementation only looks at the value of the <link> tag inside
  * the <wpt> tag of the GPX file.
- * 
+ *
  * <h2>HowTo implement a new Marker</h2>
  * <ul>
  * <li> Subclass Marker or ButtonMarker and override <code>containsPoint</code>
@@ -53,7 +53,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *      Add at top, if your marker should overwrite an current marker or at bottom
  *      if you only add a new marker style.</li>
  * </ul>
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  */
 public class Marker implements ActionListener {
@@ -97,7 +97,7 @@ public class Marker implements ActionListener {
                 } else if (wpt.attr.containsKey("desc")) {
                     name_desc = wpt.getString("desc");
                 }
-                
+
                 if (uri == null)
                     return new Marker(wpt.latlon, name_desc, wpt.getString("symbol"), parentLayer, time, offset);
                 else if (uri.endsWith(".wav"))
@@ -120,7 +120,7 @@ public class Marker implements ActionListener {
     }
 
     public Marker(LatLon ll, String text, String iconName, MarkerLayer parentLayer, double time, double offset) {
-        eastNorth = Main.proj.latlon2eastNorth(ll); 
+        eastNorth = Main.proj.latlon2eastNorth(ll);
         this.text = text;
         this.offset = offset;
         this.time = time;
@@ -136,7 +136,7 @@ public class Marker implements ActionListener {
     /**
      * Checks whether the marker display area contains the given point.
      * Markers not interested in mouse clicks may always return false.
-     * 
+     *
      * @param p The point to check
      * @return <code>true</code> if the marker "hotspot" contains the point.
      */
@@ -147,7 +147,7 @@ public class Marker implements ActionListener {
     /**
      * Called when the mouse is clicked in the marker's hotspot. Never
      * called for markers which always return false from containsPoint.
-     * 
+     *
      * @param ev A dummy ActionEvent
      */
     public void actionPerformed(ActionEvent ev) {
@@ -177,10 +177,10 @@ public class Marker implements ActionListener {
      * created from the parameters given.
      *
      * @param wpt waypoint data for marker
-     * @param relativePath An path to use for constructing relative URLs or 
+     * @param relativePath An path to use for constructing relative URLs or
      *        <code>null</code> for no relative URLs
-     * @param offset double in seconds as the time offset of this marker from 
-     * 		  the GPX file from which it was derived (if any).  
+     * @param offset double in seconds as the time offset of this marker from
+     *        the GPX file from which it was derived (if any).
      * @return a new Marker object
      */
     public static Marker createMarker(WayPoint wpt, File relativePath, MarkerLayer parentLayer, double time, double offset) {
@@ -191,17 +191,17 @@ public class Marker implements ActionListener {
         }
         return null;
     }
-    
+
     /**
      * Returns an AudioMarker derived from this Marker and the provided uri
      * Subclasses of specific marker types override this to return null as they can't
-     * be turned into AudioMarkers. This includes AudioMarkers themselves, as they 
-     * already have audio.  
-     * 
+     * be turned into AudioMarkers. This includes AudioMarkers themselves, as they
+     * already have audio.
+     *
      * @param uri uri of wave file
      * @return AudioMarker
      */
-    
+
     public AudioMarker audioMarkerFromMarker(String uri) {
         AudioMarker audioMarker = AudioMarker.create(Main.proj.eastNorth2latlon(this.eastNorth), this.text, uri, this.parentLayer, this.time, this.offset);
         return audioMarker;

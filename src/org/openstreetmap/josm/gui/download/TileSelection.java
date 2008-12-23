@@ -18,9 +18,9 @@ import javax.swing.SpinnerNumberModel;
 import org.openstreetmap.josm.tools.GBC;
 /**
  * Tile selector.
- * 
+ *
  * Provides a tile coordinate input field.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  *
  */
@@ -31,7 +31,7 @@ public class TileSelection implements DownloadSelection {
     private JTextField tileX1 = new JTextField(7);
     private JTextField tileY1 = new JTextField(7);
     private JSpinner tileZ = new JSpinner(new SpinnerNumberModel(12, 10, 18, 1));
-    
+
     public void addGui(final DownloadDialog gui) {
 
         JPanel smpanel = new JPanel(new GridBagLayout());
@@ -75,7 +75,7 @@ public class TileSelection implements DownloadSelection {
                 }
             }
         };
-        
+
         for (JTextField f : new JTextField[] { tileX0, tileX1, tileY0, tileY1 }) {
             f.setMinimumSize(new Dimension(100,new JTextField().getMinimumSize().height));
             f.addFocusListener(dialogUpdater);
@@ -83,14 +83,14 @@ public class TileSelection implements DownloadSelection {
 
         gui.tabpane.addTab(tr("Tile Numbers"), smpanel);
     }
-    
+
     /**
      * Called when bounding box is changed by one of the other download dialog tabs.
      */
     public void boundingBoxChanged(DownloadDialog gui) {
         updateBboxFields(gui);
     }
-    
+
     private void updateBboxFields(DownloadDialog gui) {
         int z = ((Integer) tileZ.getValue()).intValue();
         tileX0.setText(Integer.toString(lonToTileX(z, gui.minlon)));
@@ -98,16 +98,16 @@ public class TileSelection implements DownloadSelection {
         tileY0.setText(Integer.toString(latToTileY(z, gui.maxlat-.00001)));
         tileY1.setText(Integer.toString(latToTileY(z, gui.minlat)));
     }
-    
+
     public static int latToTileY(int zoom, double lat) {
-        if ((zoom < 3) || (zoom > 18)) return -1; 
+        if ((zoom < 3) || (zoom > 18)) return -1;
         double l = lat / 180 * Math.PI;
         double pf = Math.log(Math.tan(l) + (1/Math.cos(l)));
         return (int) ((1<<(zoom-1)) * (Math.PI - pf) / Math.PI);
-    }   
+    }
 
     public static int lonToTileX(int zoom, double lon) {
-        if ((zoom < 3) || (zoom > 18)) return -1; 
+        if ((zoom < 3) || (zoom > 18)) return -1;
         return (int) ((1<<(zoom-3)) * (lon + 180.0) / 45.0);
     }
 
