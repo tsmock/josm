@@ -83,6 +83,7 @@ public class GpxLayer extends Layer {
     private Color computeCacheColorUsed;
     private colorModes computeCacheColored;
     private int computeCacheColorTracksTune;
+    private boolean isLocalFile;
 
     public GpxLayer(GpxData d) {
         super((String) d.attr.get("name"));
@@ -94,6 +95,12 @@ public class GpxLayer extends Layer {
     public GpxLayer(GpxData d, String name) {
         this(d);
         this.name = name;
+    }
+
+    public GpxLayer(GpxData d, String name, boolean isLocal) {
+        this(d);
+        this.name = name;
+        this.isLocalFile = isLocal;
     }
 
     @Override public Icon getIcon() {
@@ -390,7 +397,7 @@ public class GpxLayer extends Layer {
         // don't draw lines if longer than x meters
         int maxLineLength = Main.pref.getInteger("draw.rawgps.max-line-length", -1);
         // draw line between points, global setting
-        boolean lines = Main.pref.getBoolean("draw.rawgps.lines");
+        boolean lines = (Main.pref.getBoolean("draw.rawgps.lines") || (Main.pref.getBoolean("draw.rawgps.lines.localfiles") && this.isLocalFile));
         String linesKey = "draw.rawgps.lines.layer "+name;
         // draw lines, per-layer setting
         if (Main.pref.hasKey(linesKey))
@@ -938,7 +945,7 @@ public class GpxLayer extends Layer {
                     }
                     if (w2 != null) break;
                 }
-            }	
+            }    
 
             if (w1 == null || w2 == null) {
                 timedMarkersOmitted = true;
@@ -953,7 +960,7 @@ public class GpxLayer extends Layer {
                 if (dot > 0) { name = name.substring(0, dot); }
                 wayPointFromTimeStamp.attr.put("name", name);
                 waypoints.add(wayPointFromTimeStamp);
-            }        	
+            }            
         }
         
         // (e) analyse audio for spoken markers here, in due course
