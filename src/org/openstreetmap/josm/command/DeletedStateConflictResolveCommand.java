@@ -10,51 +10,47 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.conflict.MergeDecisionType;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * Represents a command for resolving a version conflict between two {@see OsmPrimitive}
- *
+ * Represents a the resolution of a conflict between the coordinates of two {@see Node}s
  *
  */
-public class VersionConflictResolveCommand extends Command {
+public class DeletedStateConflictResolveCommand extends Command {
 
+    /** my primitive (in the local dataset). merge decisions are applied to this
+     *  node
+     */
     private final OsmPrimitive my;
+    /** their primitive (in the server dataset) */
     private final OsmPrimitive their;
+
+    /** the merge decision */
+    private final MergeDecisionType decision;
+
+
 
     /**
      * constructor
-     * @param my  my primitive (i.e. the primitive from the local dataset)
-     * @param their their primitive (i.e. the primitive from the server)
+     * 
+     * @param my  my node
+     * @param their  their node
+     * @param decision the merge decision
      */
-    public VersionConflictResolveCommand(OsmPrimitive my, OsmPrimitive their) {
+    public DeletedStateConflictResolveCommand(OsmPrimitive my, OsmPrimitive their, MergeDecisionType decision) {
         this.my = my;
         this.their = their;
+        this.decision = decision;
     }
 
-    //FIXME copied from TagConflictResolveCommand -> refactor
-    /**
-     * replies a (localized) display name for the type of an OSM primitive
-     * 
-     * @param primitive the primitive
-     * @return a localized display name
-     */
-    protected String getPrimitiveTypeAsString(OsmPrimitive primitive) {
-        if (primitive instanceof Node) return tr("node");
-        if (primitive instanceof Way) return tr("way");
-        if (primitive instanceof Relation) return tr("relation");
-        return "";
-    }
 
     @Override
     public MutableTreeNode description() {
         return new DefaultMutableTreeNode(
                 new JLabel(
-                        tr("Resolve version conflicts for {0} {1}",getPrimitiveTypeAsString(my), my.id),
+                        tr("Resolve conflicts in deleted state in {0}",my.id),
                         ImageProvider.get("data", "object"),
                         JLabel.HORIZONTAL
                 )
@@ -63,9 +59,19 @@ public class VersionConflictResolveCommand extends Command {
 
     @Override
     public boolean executeCommand() {
+        // remember the current state of modified primitives, i.e. of
+        // OSM primitive 'my'
+        //
         super.executeCommand();
-        my.version = Math.max(my.version, their.version);
-        Main.map.conflictDialog.removeConflictForPrimitive(my);
+
+        if (decision.equals(MergeDecisionType.KEEP_MINE)) {
+            // do nothing
+        } else if (decision.equals(MergeDecisionType.KEEP_THEIR)) {
+            my.deleted = their.deleted;
+        } else
+            // should not happen
+            throw new IllegalStateException(tr("cannot resolve undecided conflict"));
+
         return true;
     }
 
@@ -77,6 +83,8 @@ public class VersionConflictResolveCommand extends Command {
 
     @Override
     public void undoCommand() {
+        // restore former state of modified primitives
+        //
         super.undoCommand();
 
         // restore a conflict if necessary
