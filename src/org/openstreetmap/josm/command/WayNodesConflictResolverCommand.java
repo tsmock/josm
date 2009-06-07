@@ -24,36 +24,36 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class WayNodesConflictResolverCommand extends Command {
 
     /** my way */
-    private Way my;
-    /** their way */ 
-    private Way their;
+    private final Way my;
+    /** their way */
+    private final Way their;
     /** the list of merged nodes. This becomes the list of news of my way after the
      *  command is executed
      */
-    private List<Node> mergedNodeList; 
-    
+    private final List<Node> mergedNodeList;
+
     /**
      * 
      * @param my my may
      * @param their their way
-     * @param mergedNodeList  the list of merged nodes 
+     * @param mergedNodeList  the list of merged nodes
      */
     public WayNodesConflictResolverCommand(Way my, Way their, List<Node> mergedNodeList) {
         this.my = my;
         this.their = their;
         this.mergedNodeList = mergedNodeList;
     }
-    
-    
+
+
     @Override
     public MutableTreeNode description() {
         return new DefaultMutableTreeNode(
                 new JLabel(
-                   tr("Resolve conflicts in node list of of way {0}", my.id), 
-                   ImageProvider.get("data", "object"), 
-                   JLabel.HORIZONTAL
+                        tr("Resolve conflicts in node list of of way {0}", my.id),
+                        ImageProvider.get("data", "object"),
+                        JLabel.HORIZONTAL
                 )
-         );
+        );
     }
 
     @Override
@@ -61,9 +61,9 @@ public class WayNodesConflictResolverCommand extends Command {
         // remember the current state of 'my' way
         //
         super.executeCommand();
-        
+
         // replace the list of nodes of 'my' way by the list of merged
-        // nodes 
+        // nodes
         //
         my.nodes.clear();
         for (int i=0; i<mergedNodeList.size();i++) {
@@ -73,13 +73,13 @@ public class WayNodesConflictResolverCommand extends Command {
                 System.out.println("Main.ds doesn't include node " + n.toString());
             }
         }
-        return true;        
+        return true;
     }
 
     @Override
     public void fillModifiedData(Collection<OsmPrimitive> modified, Collection<OsmPrimitive> deleted,
             Collection<OsmPrimitive> added) {
-        modified.add(my);        
+        modified.add(my);
     }
 
     @Override
@@ -87,11 +87,11 @@ public class WayNodesConflictResolverCommand extends Command {
         // restore the former state
         //
         super.undoCommand();
-        
+
         // restore a conflict if necessary
         //
         if (!Main.map.conflictDialog.conflicts.containsKey(my)) {
-            Main.map.conflictDialog.conflicts.put(my,their);
+            Main.map.conflictDialog.addConflict(my, their);
         }
     }
 }

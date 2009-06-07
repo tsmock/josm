@@ -14,29 +14,26 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.conflict.MergeDecisionType;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * Represents a command for resolving a version conflict between two {@see OsmPrimitive}
- *
+ * Represents a the resolution of a conflict between the coordinates of two {@see Node}s
  *
  */
-public class VersionConflictResolveCommand extends Command {
+public class CoordinateConflictResolveCommand extends Command {
 
-    private final OsmPrimitive my;
-    private final OsmPrimitive their;
-
-    /**
-     * constructor
-     * @param my  my primitive (i.e. the primitive from the local dataset)
-     * @param their their primitive (i.e. the primitive from the server)
+    /** my node (in the local dataset). merge decisions are applied to this
+     *  node
      */
-    public VersionConflictResolveCommand(OsmPrimitive my, OsmPrimitive their) {
-        this.my = my;
-        this.their = their;
-    }
+    private final Node my;
+    /** their node (in the server dataset) */
+    private final Node their;
 
-    //FIXME copied from TagConflictResolveCommand -> refactor
+    /** the merge decision */
+    private final MergeDecisionType decision;
+
+
     /**
      * replies a (localized) display name for the type of an OSM primitive
      * 
@@ -50,11 +47,25 @@ public class VersionConflictResolveCommand extends Command {
         return "";
     }
 
+    /**
+     * constructor
+     * 
+     * @param my  my node
+     * @param their  their node
+     * @param decision the merge decision
+     */
+    public CoordinateConflictResolveCommand(Node my, Node their, MergeDecisionType decision) {
+        this.my = my;
+        this.their = their;
+        this.decision = decision;
+    }
+
+
     @Override
     public MutableTreeNode description() {
         return new DefaultMutableTreeNode(
                 new JLabel(
-                        tr("Resolve version conflicts for {0} {1}",getPrimitiveTypeAsString(my), my.id),
+                        tr("Resolve conflicts in coordinates in {0}",my.id),
                         ImageProvider.get("data", "object"),
                         JLabel.HORIZONTAL
                 )
@@ -63,9 +74,19 @@ public class VersionConflictResolveCommand extends Command {
 
     @Override
     public boolean executeCommand() {
+        // remember the current state of modified primitives, i.e. of
+        // OSM primitive 'my'
+        //
         super.executeCommand();
-        my.version = Math.max(my.version, their.version);
-        Main.map.conflictDialog.removeConflictForPrimitive(my);
+
+        if (decision.equals(MergeDecisionType.KEEP_MINE)) {
+            // do nothing
+        } else if (decision.equals(MergeDecisionType.KEEP_THEIR)) {
+            my.setCoor(their.getCoor());
+        } else
+            // should not happen
+            throw new IllegalStateException(tr("cannot resolve undecided conflict"));
+
         return true;
     }
 
@@ -77,6 +98,8 @@ public class VersionConflictResolveCommand extends Command {
 
     @Override
     public void undoCommand() {
+        // restore former state of modified primitives
+        //
         super.undoCommand();
 
         // restore a conflict if necessary
