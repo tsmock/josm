@@ -15,7 +15,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.conflict.tags.MergeDecisionType;
+import org.openstreetmap.josm.gui.conflict.MergeDecisionType;
 import org.openstreetmap.josm.gui.conflict.tags.TagMergeItem;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -120,9 +120,7 @@ public class TagConflictResolveCommand extends Command {
         // restore a conflict if necessary
         //
         if (!Main.map.conflictDialog.conflicts.containsKey(my)) {
-            Main.map.conflictDialog.conflicts.put(my,their);
+            Main.map.conflictDialog.addConflict(my, their);
         }
     }
-
-
 }
