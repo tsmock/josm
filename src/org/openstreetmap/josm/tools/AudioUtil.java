@@ -19,7 +19,7 @@ import org.openstreetmap.josm.Main;
  *
  */
 public class AudioUtil {
-    
+
     static public double getCalibratedDuration(File wavFile) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(
@@ -36,6 +36,4 @@ public class AudioUtil {
             return 0.0;
         }
     }
-    
 }
- 
