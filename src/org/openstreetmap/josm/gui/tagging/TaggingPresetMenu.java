@@ -67,7 +67,7 @@ public class TaggingPresetMenu extends TaggingPreset {
             Object item = items[i];
             if (item instanceof JMenu){
                 sortMenu((JMenu)item);
-            }			
+            }
             if (item instanceof JMenuItem){
                 sortarray.add((JMenuItem)item);
                 if (i == items.length-1){
