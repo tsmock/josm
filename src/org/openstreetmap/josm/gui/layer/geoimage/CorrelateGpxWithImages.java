@@ -36,6 +36,7 @@ import java.util.zip.GZIPInputStream;
 import javax.swing.AbstractListModel;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -172,7 +173,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                 } catch (SAXException x) {
                     x.printStackTrace();
                     JOptionPane.showMessageDialog(
-                            Main.parent, 
+                            Main.parent,
                             tr("Error while parsing {0}",sel.getName())+": "+x.getMessage(),
                             tr("Error"),
                             JOptionPane.ERROR_MESSAGE
@@ -181,7 +182,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                 } catch (IOException x) {
                     x.printStackTrace();
                     JOptionPane.showMessageDialog(
-                            Main.parent, 
+                            Main.parent,
                             tr("Could not read \"{0}\"",sel.getName())+"\n"+x.getMessage(),
                             tr("Error"),
                             JOptionPane.ERROR_MESSAGE
@@ -292,7 +293,7 @@ public class CorrelateGpxWithImages implements ActionListener {
 
             cbTimezones = new JComboBox(vtTimezones);
 
-            String tzId = Main.pref.get("tagimages.timezoneid", "");
+            String tzId = Main.pref.get("geoimage.timezoneid", "");
             TimeZone defaultTz;
             if (tzId.length() == 0) {
                 defaultTz = TimeZone.getDefault();
@@ -350,7 +351,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             openButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent arg0) {
-                    JFileChooser fc = new JFileChooser(Main.pref.get("tagimages.lastdirectory"));
+                    JFileChooser fc = new JFileChooser(Main.pref.get("geoimage.lastdirectory"));
                     fc.setAcceptAllFileFilterUsed(false);
                     fc.setMultiSelectionEnabled(false);
                     fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -386,8 +387,8 @@ public class CorrelateGpxWithImages implements ActionListener {
             boolean isOk = false;
             while (! isOk) {
                 int answer = JOptionPane.showConfirmDialog(
-                        Main.parent, panel, 
-                        tr("Synchronize time from a photo of the GPS receiver"), 
+                        Main.parent, panel,
+                        tr("Synchronize time from a photo of the GPS receiver"),
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE
                         );
@@ -412,7 +413,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                 tzId = selectedTz.substring(0, pos - 1);
                 String tzValue = selectedTz.substring(pos + 1, selectedTz.length() - 1);
 
-                Main.pref.put("tagimages.timezoneid", tzId);
+                Main.pref.put("geoimage.timezoneid", tzId);
                 tfOffset.setText(Long.toString(delta / 1000));
                 tfTimezone.setText(tzValue);
 
@@ -475,9 +476,9 @@ public class CorrelateGpxWithImages implements ActionListener {
         gc.weightx = gc.weighty = 0.0;
         panelTf.add(new JLabel(tr("Timezone: ")), gc);
 
-        float gpstimezone = Float.parseFloat(Main.pref.get("tagimages.doublegpstimezone", "0.0"));
+        float gpstimezone = Float.parseFloat(Main.pref.get("geoimage.doublegpstimezone", "0.0"));
         if (gpstimezone == 0.0) {
-            gpstimezone = - Long.parseLong(Main.pref.get("tagimages.gpstimezone", "0"));
+            gpstimezone = - Long.parseLong(Main.pref.get("geoimage.gpstimezone", "0"));
         }
         tfTimezone = new JTextField();
         tfTimezone.setText(formatTimezone(gpstimezone));
@@ -497,7 +498,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         gc.weightx = gc.weighty = 0.0;
         panelTf.add(new JLabel(tr("Offset:")), gc);
 
-        long delta = Long.parseLong(Main.pref.get("tagimages.delta", "0")) / 1000;
+        long delta = Long.parseLong(Main.pref.get("geoimage.delta", "0")) / 1000;
         tfOffset = new JTextField();
         tfOffset.setText(Long.toString(delta));
         gc.gridx = gc.gridy = 1;
@@ -555,6 +556,16 @@ public class CorrelateGpxWithImages implements ActionListener {
         gc.weighty = 0.0;
         rbUntaggedImg = new JRadioButton(tr("Not yet tagged images"));
         panelTf.add(rbUntaggedImg, gc);
+
+        gc.gridx = 0;
+        gc.gridy = 5;
+        gc.gridwidth = 2;
+        gc.gridheight = 1;
+        gc.fill = GridBagConstraints.NONE;
+        gc.weightx = gc.weighty = 0.0;
+        yLayer.loadThumbs = Main.pref.getBoolean("geoimage.showThumbs", false);
+        JCheckBox cbShowThumbs = new JCheckBox(tr("Show Thumbnail images on the map"), yLayer.loadThumbs);
+        panelTf.add(cbShowThumbs, gc);
 
         ButtonGroup group = new ButtonGroup();
         group.add(rbAllImg);
@@ -623,11 +634,20 @@ public class CorrelateGpxWithImages implements ActionListener {
                 delta = 0;
             }
 
-            Main.pref.put("tagimages.doublegpstimezone", Double.toString(gpstimezone));
-            Main.pref.put("tagimages.gpstimezone", Long.toString(- ((long) gpstimezone)));
-            Main.pref.put("tagimages.delta", Long.toString(delta * 1000));
+            yLayer.loadThumbs = cbShowThumbs.isSelected();
 
+            Main.pref.put("geoimage.doublegpstimezone", Double.toString(gpstimezone));
+            Main.pref.put("geoimage.gpstimezone", Long.toString(- ((long) gpstimezone)));
+            Main.pref.put("geoimage.delta", Long.toString(delta * 1000));
+            Main.pref.put("geoimage.showThumbs", yLayer.loadThumbs);
             isOk = true;
+
+            if (yLayer.loadThumbs) {
+                Thread tl = new Thread(new ThumbsLoader(yLayer.data));
+                tl.setPriority(Thread.MIN_PRIORITY);
+                tl.start();
+            }
+
         }
 
         // Construct a list of images that have a date, and sort them on the date.
