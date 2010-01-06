@@ -1,40 +1,41 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.gui.preferences;
+package org.openstreetmap.josm.gui.preferences.server;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trc;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.net.PasswordAuthentication;
 import java.net.ProxySelector;
+import java.net.Authenticator.RequestorType;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.JMultilineLabel;
+import org.openstreetmap.josm.gui.help.HelpUtil;
+import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.io.DefaultProxySelector;
+import org.openstreetmap.josm.io.auth.CredentialsManager;
+import org.openstreetmap.josm.io.auth.CredentialsManagerException;
+import org.openstreetmap.josm.io.auth.CredentialsManagerFactory;
 import org.openstreetmap.josm.tools.GBC;
 
-public class ProxyPreferences implements PreferenceSetting {
-
-    public static class Factory implements PreferenceSettingFactory {
-        public PreferenceSetting createPreferenceSetting() {
-            return new ProxyPreferences();
-        }
-    }
+public class ProxyPreferencesPanel extends VerticallyScrollablePanel {
 
     public enum ProxyPolicy {
         NO_PROXY("no-proxy"),
@@ -79,6 +80,14 @@ public class ProxyPreferences implements PreferenceSetting {
     private JTextField tfProxyHttpUser;
     private JPasswordField tfProxyHttpPassword;
 
+    private JPanel pnlHttpProxyConfigurationPanel;
+    private JPanel pnlSocksProxyConfigurationPanel;
+
+    /**
+     * Builds the panel for the HTTP proxy configuration
+     * 
+     * @return
+     */
     protected JPanel buildHttpProxyConfigurationPanel() {
         JPanel pnl = new JPanel(new GridBagLayout()) {
             @Override
@@ -109,7 +118,7 @@ public class ProxyPreferences implements PreferenceSetting {
         gc.fill = GridBagConstraints.BOTH;
         gc.weightx = 1.0;
         gc.weighty = 1.0;
-        pnl.add(new JMultilineLabel(tr("Please enter a username and a password if your proxy requires authentication.")), gc);
+        pnl.add(new JLabel(tr("Please enter a username and a password if your proxy requires authentication.")), gc);
 
         gc.gridy = 3;
         gc.gridx = 0;
@@ -131,6 +140,11 @@ public class ProxyPreferences implements PreferenceSetting {
         return pnl;
     }
 
+    /**
+     * Builds the panel for the SOCKS proxy configuration
+     * 
+     * @return
+     */
     protected JPanel buildSocksProxyConfigurationPanel() {
         JPanel pnl = new JPanel(new GridBagLayout()) {
             @Override
@@ -176,25 +190,27 @@ public class ProxyPreferences implements PreferenceSetting {
             bgProxyPolicy.add(rbProxyPolicy.get(pp));
             rbProxyPolicy.get(pp).addItemListener(policyChangeListener);
         }
+
+        // radio button "No proxy"
         gc.gridx = 0;
         gc.gridy = 0;
-        gc.fill = GridBagConstraints.NONE;
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
-        pnl.add(rbProxyPolicy.get(ProxyPolicy.NO_PROXY),gc);
-        gc.gridx = 1;
         gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.anchor = GridBagConstraints.NORTHWEST;
+        gc.weightx = 0.0;
+        pnl.add(rbProxyPolicy.get(ProxyPolicy.NO_PROXY),gc);
+
+        gc.gridx = 1;
         gc.weightx = 1.0;
         pnl.add(new JLabel(tr("No proxy")), gc);
 
+        // radio button "System settings"
         gc.gridx = 0;
         gc.gridy = 1;
-        gc.fill = GridBagConstraints.NONE;
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gc.weightx = 0.0;
         pnl.add(rbProxyPolicy.get(ProxyPolicy.USE_SYSTEM_SETTINGS),gc);
+
         gc.gridx = 1;
-        gc.fill = GridBagConstraints.HORIZONTAL;
         gc.weightx = 1.0;
-        gc.weighty = 0.0;
         String msg;
         if (DefaultProxySelector.willJvmRetrieveSystemProxies()) {
             msg = tr("Use standard system settings");
@@ -203,45 +219,50 @@ public class ProxyPreferences implements PreferenceSetting {
         }
         pnl.add(new JMultilineLabel("<html>" + msg + "</html>"), gc);
 
+        // radio button http proxy
         gc.gridx = 0;
         gc.gridy = 2;
-        gc.fill = GridBagConstraints.NONE;
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gc.weightx = 0.0;
         pnl.add(rbProxyPolicy.get(ProxyPolicy.USE_HTTP_PROXY),gc);
+
         gc.gridx = 1;
-        gc.fill = GridBagConstraints.HORIZONTAL;
         gc.weightx = 1.0;
         pnl.add(new JLabel(tr("Manually configure a HTTP proxy")),gc);
 
+        // the panel with the http proxy configuration parameters
         gc.gridx = 1;
         gc.gridy = 3;
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.weightx = 1.0;
         gc.weighty = 0.0;
-        pnl.add(buildHttpProxyConfigurationPanel(),gc);
+        pnl.add(pnlHttpProxyConfigurationPanel = buildHttpProxyConfigurationPanel(),gc);
 
+        // radio button SOCKS proxy
         gc.gridx = 0;
         gc.gridy = 4;
-        gc.fill = GridBagConstraints.NONE;
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gc.weightx = 0.0;
         pnl.add(rbProxyPolicy.get(ProxyPolicy.USE_SOCKS_PROXY),gc);
+
         gc.gridx = 1;
-        gc.fill = GridBagConstraints.HORIZONTAL;
         gc.weightx = 1.0;
         pnl.add(new JLabel(tr("Use a SOCKS proxy")),gc);
 
+        // the panel with the SOCKS configuration parameters
         gc.gridx = 1;
         gc.gridy = 5;
         gc.fill = GridBagConstraints.BOTH;
         gc.anchor = GridBagConstraints.WEST;
         gc.weightx = 1.0;
         gc.weighty = 0.0;
-        pnl.add(buildSocksProxyConfigurationPanel(),gc);
+        pnl.add(pnlSocksProxyConfigurationPanel = buildSocksProxyConfigurationPanel(),gc);
 
         return pnl;
     }
 
-    protected void initFromPreferences() {
+    /**
+     * Initializes the panel with the values from the preferences
+     */
+    public void initFromPreferences() {
         String policy = Main.pref.get(PROXY_POLICY, null);
         ProxyPolicy pp = ProxyPolicy.fromName(policy);
         pp = pp == null? ProxyPolicy.NO_PROXY: pp;
@@ -264,23 +285,42 @@ public class ProxyPreferences implements PreferenceSetting {
         }
         tfProxySocksHost.setText(Main.pref.get(PROXY_SOCKS_HOST, ""));
         tfProxySocksPort.setText(Main.pref.get(PROXY_SOCKS_PORT, ""));
-        tfProxyHttpUser.setText(Main.pref.get(PROXY_USER, ""));
-        tfProxyHttpPassword.setText(Main.pref.get(PROXY_PASS, ""));
 
         if (pp.equals(ProxyPolicy.USE_SYSTEM_SETTINGS) && ! DefaultProxySelector.willJvmRetrieveSystemProxies()) {
             System.err.println(tr("Warning: JOSM is configured to use proxies from the system setting, but the JVM is not configured to retrieve them. Resetting preferences to ''No proxy''"));
             pp = ProxyPolicy.NO_PROXY;
             rbProxyPolicy.get(pp).setSelected(true);
         }
+
+        // save the proxy user and the proxy password to a credentials store managed by
+        // the credentials manager
+        CredentialsManager cm = CredentialsManagerFactory.getCredentialManager();
+        try {
+            PasswordAuthentication pa = cm.lookup(RequestorType.PROXY);
+            if (pa == null) {
+                tfProxyHttpUser.setText("");
+                tfProxyHttpPassword.setText("");
+            } else {
+                tfProxyHttpUser.setText(pa.getUserName() == null ? "" : pa.getUserName());
+                tfProxyHttpPassword.setText(pa.getPassword() == null ? "" : String.valueOf(pa.getPassword()));
+            }
+        } catch(CredentialsManagerException e) {
+            e.printStackTrace();
+            tfProxyHttpUser.setText("");
+            tfProxyHttpPassword.setText("");
+        }
     }
 
     protected void updateEnabledState() {
-        tfProxyHttpHost.setEnabled(rbProxyPolicy.get(ProxyPolicy.USE_HTTP_PROXY).isSelected());
-        tfProxyHttpPort.setEnabled(rbProxyPolicy.get(ProxyPolicy.USE_HTTP_PROXY).isSelected());
-        tfProxyHttpUser.setEnabled(rbProxyPolicy.get(ProxyPolicy.USE_HTTP_PROXY).isSelected());
-        tfProxyHttpPassword.setEnabled(rbProxyPolicy.get(ProxyPolicy.USE_HTTP_PROXY).isSelected());
-        tfProxySocksHost.setEnabled(rbProxyPolicy.get(ProxyPolicy.USE_SOCKS_PROXY).isSelected());
-        tfProxySocksPort.setEnabled(rbProxyPolicy.get(ProxyPolicy.USE_SOCKS_PROXY).isSelected());
+        boolean isHttpProxy = rbProxyPolicy.get(ProxyPolicy.USE_HTTP_PROXY).isSelected();
+        for (Component c: pnlHttpProxyConfigurationPanel.getComponents()) {
+            c.setEnabled(isHttpProxy);
+        }
+
+        boolean isSocksProxy = rbProxyPolicy.get(ProxyPolicy.USE_SOCKS_PROXY).isSelected();
+        for (Component c: pnlSocksProxyConfigurationPanel.getComponents()) {
+            c.setEnabled(isSocksProxy);
+        }
 
         rbProxyPolicy.get(ProxyPolicy.USE_SYSTEM_SETTINGS).setEnabled(DefaultProxySelector.willJvmRetrieveSystemProxies());
     }
@@ -291,16 +331,21 @@ public class ProxyPreferences implements PreferenceSetting {
         }
     }
 
-    public void addGui(PreferenceDialog gui) {
-        gui.connection.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
-        gui.connection.add(new JLabel(tr("Proxy Settings")), GBC.eol());
-        gui.connection.add(buildProxySettingsPanel(), GBC.eol().insets(20,10,0,0));
+    public ProxyPreferencesPanel() {
+        setLayout(new GridBagLayout());
+        setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        add(buildProxySettingsPanel(), GBC.eop().anchor(GridBagConstraints.NORTHWEST).fill(GridBagConstraints.BOTH));
 
         initFromPreferences();
         updateEnabledState();
+
+        HelpUtil.setHelpContext(this, HelpUtil.ht("/Preferences/Connection#ProxySettings"));
     }
 
-    public boolean ok() {
+    /**
+     * Saves the current values to the preferences
+     */
+    public void saveToPreferences() {
         ProxyPolicy policy = null;
         for (ProxyPolicy pp: ProxyPolicy.values()) {
             if (rbProxyPolicy.get(pp).isSelected()) {
@@ -316,18 +361,22 @@ public class ProxyPreferences implements PreferenceSetting {
         Main.pref.put(PROXY_HTTP_PORT, tfProxyHttpPort.getText());
         Main.pref.put(PROXY_SOCKS_HOST, tfProxySocksHost.getText());
         Main.pref.put(PROXY_SOCKS_PORT, tfProxySocksPort.getText());
-        Main.pref.put(PROXY_USER, tfProxyHttpUser.getText());
-        Main.pref.put(PROXY_PASS, String.valueOf(tfProxyHttpPassword.getPassword()));
-
-        // remove these legacy property keys
-        Main.pref.put("proxy.anonymous", null);
-        Main.pref.put("proxy.enable", null);
 
         // update the proxy selector
         ProxySelector selector = ProxySelector.getDefault();
         if (selector instanceof DefaultProxySelector) {
             ((DefaultProxySelector)selector).initFromPreferences();
         }
-        return false;
+
+        CredentialsManager cm = CredentialsManagerFactory.getCredentialManager();
+        try {
+            PasswordAuthentication pa = new PasswordAuthentication(
+                    tfProxyHttpUser.getText().trim(),
+                    tfProxyHttpPassword.getPassword()
+            );
+            cm.store(RequestorType.PROXY, pa);
+        } catch(CredentialsManagerException e) {
+            e.printStackTrace();
+        }
     }
 }
