@@ -5,6 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.concurrent.Future;
 
@@ -21,6 +23,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.io.remotecontrol.AddTagsDialog;
 
 /**
  * Handler for load_and_zoom request.
@@ -108,6 +111,21 @@ public class LoadAndZoomHandler extends RequestHandler
             ex.printStackTrace();
             throw new RequestHandlerErrorException();
         }
+
+        /**
+         * deselect objects if parameter addtags given
+         */
+        if (args.containsKey("addtags")) {
+            Main.worker.execute(new Runnable() {
+                public void run() {
+                    DataSet ds = Main.main.getCurrentDataSet();
+                    if(ds == null) // e.g. download failed
+                        return;
+                    ds.clearSelection();
+                }
+            });
+        }
+
         if (args.containsKey("select") && Main.pref.getBoolean(changeSelectionPermissionKey, changeSelectionPermissionDefault)) {
             // select objects after downloading, zoom to selection.
             final String selection = args.get("select");
@@ -157,6 +175,34 @@ public class LoadAndZoomHandler extends RequestHandler
             // after downloading, zoom to downloaded area.
             zoom(minlat, maxlat, minlon, maxlon);
         }
+
+        /*
+         * parse addtags parameters
+         * Example URL (part):
+         * addtags=wikipedia:de%3DResidenzschloss Dresden|name:en%3DDresden Castle
+         */
+        if (args.containsKey("addtags")) {
+            Main.worker.execute(new Runnable() {
+                public void run() {
+                    String[] tags = null;
+                    try {
+                        tags = URLDecoder.decode(args.get("addtags"), "UTF-8").split("\\|");
+                    } catch (UnsupportedEncodingException e) {
+                        new RuntimeException();
+                    }
+                    String[][] keyValue = new String[tags.length][2];
+                    for (int i = 0; i<tags.length; i++) {
+                        keyValue[i] = tags[i].split("=");
+
+                        keyValue[i][0] = keyValue[i][0];
+                        keyValue[i][1] = keyValue[i][1];
+                    }
+
+                    new AddTagsDialog(keyValue);
+                }
+            });
+        }
+
     }
 
     protected void zoom(double minlat, double maxlat, double minlon, double maxlon) {
