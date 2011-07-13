@@ -6,13 +6,11 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
@@ -24,10 +22,10 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.tools.MultiMap;
 /**
  * Tests if there are duplicate relations
@@ -137,8 +135,8 @@ public class DuplicateRelation extends Test
      */
     public DuplicateRelation()
     {
-        super(tr("Duplicated relations")+".",
-              tr("This test checks that there are no relations with same tags and same members with same roles."));
+        super(tr("Duplicated relations."),
+                tr("This test checks that there are no relations with same tags and same members with same roles."));
     }
 
 
@@ -198,8 +196,9 @@ public class DuplicateRelation extends Test
         HashSet<Relation> rel_fix = new HashSet<Relation>();
 
         for (OsmPrimitive osm : sel)
-            if (osm instanceof Relation)
+            if (osm instanceof Relation) {
                 rel_fix.add((Relation)osm);
+            }
 
         if( rel_fix.size() < 2 )
             return null;
@@ -265,8 +264,9 @@ public class DuplicateRelation extends Test
         HashSet<Relation> relations = new HashSet<Relation>();
 
         for (OsmPrimitive osm : sel)
-            if (osm instanceof Relation)
+            if (osm instanceof Relation) {
                 relations.add((Relation)osm);
+            }
 
         if (relations.size() < 2)
             return false;
