@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -160,20 +161,19 @@ public class HistoryBrowserDialogManager implements MapView.LayerChangeListener 
             public void run() {
                 try {
                     for (OsmPrimitive p : notNewPrimitives) {
-                        History h = HistoryDataSet.getInstance().getHistory(p.getPrimitiveId());
+                        final History h = HistoryDataSet.getInstance().getHistory(p.getPrimitiveId());
                         if (h == null) {
                             continue;
                         }
-                        show(h);
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                show(h);
+                            }
+                        });
                     }
                 } catch (final Exception e) {
-                    SwingUtilities.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            BugReportExceptionHandler.handleException(e);
-                        }
-                    });
+                    BugReportExceptionHandler.handleException(e);
                 }
 
             }
@@ -187,15 +187,14 @@ public class HistoryBrowserDialogManager implements MapView.LayerChangeListener 
 
         @Override
         public boolean evaluate(OsmPrimitive p) {
-            if (hds.getHistory(p.getPrimitiveId()) == null) {
+            if (hds.getHistory(p.getPrimitiveId()) == null)
                 // reload if the history is not in the cache yet
                 return true;
-            } else if (!p.isNew() && hds.getHistory(p.getPrimitiveId()).getByVersion(p.getUniqueId()) == null) {
+            else if (!p.isNew() && hds.getHistory(p.getPrimitiveId()).getByVersion(p.getUniqueId()) == null)
                 // reload if the history object of the selected object is not in the cache yet
                 return true;
-            } else {
+            else
                 return false;
-            }
         }
     };
 
