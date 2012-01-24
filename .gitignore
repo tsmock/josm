@@ -19,3 +19,4 @@
 /dist
 /build
 /plugin-check
+/findbugs-josm.xml
