@@ -66,6 +66,15 @@ public class Utils {
         return new FilteredCollection<T>(collection, predicate);
     }
 
+    public static <T> T firstNonNull(T... items) {
+        for (T i : items) {
+            if (i != null) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     /**
      * Filter a collection by (sub)class.
      * This is an efficient read-only implementation.
