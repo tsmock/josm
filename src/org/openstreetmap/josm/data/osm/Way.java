@@ -580,9 +580,10 @@ public final class Way extends OsmPrimitive implements IWay {
         Node lastN = null;
         for (Node n:nodes) {
             if (lastN != null) {
+                LatLon lastNcoor = lastN.getCoor();
                 LatLon coor = n.getCoor();
-                if (coor != null) {
-                    length += coor.greatCircleDistance(lastN.getCoor());
+                if (lastNcoor != null && coor != null) {
+                    length += coor.greatCircleDistance(lastNcoor);
                 }
             }
             lastN = n;
