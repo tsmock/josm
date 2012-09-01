@@ -187,7 +187,7 @@ public class DuplicateWay extends Test
             int hash = wLat.hashCode();
             if (!knownHashCodes.contains(hash)) {
                 List<LatLon> reversedwLat = new ArrayList<LatLon>(wLat);
-                Collections.reverse(reversedwLat);
+                   Collections.reverse(reversedwLat);
                 int reverseHash = reversedwLat.hashCode();
                 if (!knownHashCodes.contains(reverseHash)) {
                     // Neither hash or reversed hash is known, remember hash
