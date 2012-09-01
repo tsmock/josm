@@ -470,6 +470,26 @@ public final class Way extends OsmPrimitive implements IWay {
         Node[] nodes = this.nodes;
         return nodes.length >= 3 && nodes[nodes.length-1] == nodes[0];
     }
+    
+    /**
+     * Determines if this way denotes an area (closed way with at least three distinct nodes).
+     * @return {@code true} if this way is closed and contains at least three distinct nodes
+     * @see #isClosed
+     * @since 5490
+     */
+    public boolean isArea() {
+        if (this.nodes.length >= 4 && isClosed()) {
+            Node distinctNode = null;
+            for (int i=1; i<nodes.length-1; i++) {
+                if (distinctNode == null && nodes[i] != nodes[0]) {
+                    distinctNode = nodes[i];
+                } else if (distinctNode != null && nodes[i] != nodes[0] && nodes[i] != distinctNode) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Returns the last node of this way.
