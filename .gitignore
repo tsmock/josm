@@ -16,6 +16,7 @@
 .DS_store
 # Simulated Subversion default ignores end here
 /bin
+/bin2
 /dist
 /build
 /plugin-check
