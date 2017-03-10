@@ -28,3 +28,4 @@
 /build2
 /junit*.properties
 /foobar
+/pmd-josm.xml
