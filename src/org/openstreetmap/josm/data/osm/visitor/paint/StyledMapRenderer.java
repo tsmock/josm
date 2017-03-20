@@ -1029,7 +1029,7 @@ public class StyledMapRenderer extends AbstractMapRenderer {
                 List<GlyphVector> translatedGvs = position.generateGlyphVectors(path, nb, gvs, isGlyphVectorDoubleTranslationBug(text.font));
                 displayText(() -> translatedGvs.forEach(gv -> g.drawGlyphVector(gv, 0, 0)),
                         () -> translatedGvs.stream().collect(
-                                () -> new Path2D.Double(),
+                                Path2D.Double::new,
                                 (p, gv) -> p.append(gv.getOutline(0, 0), false),
                                 (p1, p2) -> p1.append(p2, false)),
                         osm.isDisabled(), text);
