@@ -29,3 +29,5 @@
 /foobar
 /imagery_*
 /validator-*
+/test_BLOCK_v2.*
+/hs_err_pid*
