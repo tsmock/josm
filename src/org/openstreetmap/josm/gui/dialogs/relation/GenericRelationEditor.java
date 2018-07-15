@@ -250,7 +250,7 @@ public class GenericRelationEditor extends RelationEditor {
                 referrerBrowser.init();
             }
         });
-        
+
         IRelationEditorActionAccess actionAccess = new RelationEditorActionAccess();
 
         refreshAction = new RefreshAction(actionAccess);
@@ -644,9 +644,9 @@ public class GenericRelationEditor extends RelationEditor {
                     new DownloadSelectedIncompleteMembersAction(editorAccess)
                     ));
             groups.addAll(RelationEditorHooks.getMemberActions());
-            
+
             IRelationEditorActionGroup.fillToolbar(this, groups, editorAccess);
-            
+
 
             InputMap inputMap = editorAccess.getMemberTable().getInputMap(MemberTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
             inputMap.put((KeyStroke) new RemoveAction(editorAccess, "removeSelected").getValue(AbstractAction.ACCELERATOR_KEY), "removeSelected");
@@ -685,18 +685,18 @@ public class GenericRelationEditor extends RelationEditor {
                 new RemoveSelectedAction(editorAccess)
                 ));
         groups.addAll(RelationEditorHooks.getSelectActions());
-        
+
         IRelationEditorActionGroup.fillToolbar(tb, groups, editorAccess);
         return tb;
     }
-    
+
     private static IRelationEditorActionGroup buildNativeGroup(int order, AbstractRelationEditorAction... actions) {
         return new IRelationEditorActionGroup() {
             @Override
             public int order() {
                 return order;
             }
-            
+
             @Override
             public List<AbstractRelationEditorAction> getActions(IRelationEditorActionAccess editorAccess) {
                 return Arrays.asList(actions);
@@ -948,7 +948,7 @@ public class GenericRelationEditor extends RelationEditor {
             }
         }
     }
-    
+
     private class RelationEditorActionAccess implements IRelationEditorActionAccess {
 
         @Override
@@ -985,6 +985,6 @@ public class GenericRelationEditor extends RelationEditor {
         public AutoCompletingTextField getTextFieldRole() {
             return tfRole;
         }
-        
+
     }
 }
