@@ -32,3 +32,4 @@
 /taginfo_*.json
 /test_BLOCK_v2.*
 /validator-*
+/.josm-local
