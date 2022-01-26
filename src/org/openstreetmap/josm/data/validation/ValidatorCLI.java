@@ -384,7 +384,7 @@ public class ValidatorCLI implements CLIModule {
         switch (option) {
         case HELP:
             showHelp();
-            System.exit(0);
+            Lifecycle.exitJosm(true, 0);
             break;
         case DEBUG:
             this.logLevel = Logging.LEVEL_DEBUG;
