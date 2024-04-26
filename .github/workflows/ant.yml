@@ -140,7 +140,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # Use `curl` instead of `gh release upload` so we can set the content type
         run: |
-          curl --location \
+          curl --verbose --location \
             --request POST \
             --header "Accept: application/vnd.github+json" \
             --header "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
