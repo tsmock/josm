@@ -135,11 +135,20 @@ jobs:
       - name: Upload jar
         if: ${{ always() && needs.createrelease.outputs.upload_url }}
         env:
+          ASSET: dist/josm-custom.jar
           ASSET_NAME: JOSM-${{ runner.os}}-java${{ matrix.java }}-${{ needs.createrelease.outputs.josm_revision }}.jar
           CONTENT_TYPE: application/java-archive
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # Use `curl` instead of `gh release upload` so we can set the content type
-        run: gh release upload ${{ needs.createrelease.outputs.josm_revision }} dist/josm-custom.jar#${ASSET_NAME}
+        run: |
+          gh api --verbose --method POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
+            --header "Content-Type: ${{ env.CONTENT_TYPE }}" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            --header "X-Accepted-GitHub-Permissions: contents=write" \
+            "$(sed 's/{?name,label}/?name=${{ env.ASSET_NAME }}/g' <<< ${{ needs.createrelease.outputs.upload_url }})" \
+            --input "${{ env.ASSET }}"
 
       - name: Build and package for macOS
         if: ${{ runner.os == 'macos' && matrix.java != '11' && always() }}
